@@ -34,4 +34,51 @@
 cmake_minimum_required(VERSION 3.6)
 project(sfserialmac VERSION 3.0.0)
 
+#---------------------------------------------------------------------------------------
+# Include cmake modules
+#---------------------------------------------------------------------------------------
+list(APPEND CMAKE_FIND_ROOT_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
+list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules)
+
+include(GNUInstallDirs)
+include(CMakePackageConfigHelpers)
+
+# custom modules
+include(ColorMessages)
+
+#---------------------------------------------------------------------------------------
+# Required dependencies versions
+#---------------------------------------------------------------------------------------
+set(SFCRC_VERSION 0.1.3)
+
+#---------------------------------------------------------------------------------------
+# Options
+#---------------------------------------------------------------------------------------
+option(BUILD_DOC "Build documentation" OFF)
+option(BUILD_TESTING "Build unit tests" OFF)
+
+#---------------------------------------------------------------------------------------
+# Product info
+#---------------------------------------------------------------------------------------
+set(PROJECT_PRODUCT_COMPANY "STACKFORCE" CACHE STRING "company")
+set(PROJECT_PRODUCT_NAME    "Serial MAC" CACHE STRING "product")
+
+#---------------------------------------------------------------------------------------
+# Find required packages
+#---------------------------------------------------------------------------------------
+
+# crc
+colormessage(STATUS "Searching crc project configuration")
+find_package(sfcrc ${CRC_VERSION} REQUIRED)
+
+# googletest
+if(BUILD_TESTING)
+    colormessage(STATUS "Searching googletest project configuration")
+    find_package(gtest REQUIRED CONFIG)
+endif()
+
+
+#---------------------------------------------------------------------------------------
+# Add subdirectories
+#---------------------------------------------------------------------------------------
 add_subdirectory(src)
