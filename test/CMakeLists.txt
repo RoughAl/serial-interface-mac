@@ -31,44 +31,110 @@
 
 set (CMAKE_CXX_STANDARD 11)
 
-#---------------------------------------------------------------------------------------
-# Init test suite
-#---------------------------------------------------------------------------------------
-set(TEST_SUITE_INIT_SOURCES
+set(TEST_SUITE_COMMON_SOURECES
     ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/sf_serialmac_test.cpp
+)
+#=======================================================================================
+# Initialization Test Suites
+#=======================================================================================
+
+#---------------------------------------------------------------------------------------
+# Configurable library
+#---------------------------------------------------------------------------------------
+set(TEST_SUITE_CONFIGURABLE_INIT_NAME serialmac-configurable-init-test-suite)
+
+set(TEST_SUITE_CONFIGURABLE_INIT_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/sf_serialmac_init_suite.cpp
 )
 
-add_executable(serialmac-non-configurable-init-test ${TEST_SUITE_INIT_SOURCES})
+add_executable(${TEST_SUITE_CONFIGURABLE_INIT_NAME}
+    ${TEST_SUITE_COMMON_SOURECES}
+    ${TEST_SUITE_CONFIGURABLE_INIT_SOURCES}
+)
 
-target_link_libraries(serialmac-non-configurable-init-test
+target_link_libraries(${TEST_SUITE_CONFIGURABLE_INIT_NAME}
     libgmock
-    sfserialmac
+    sfserialmac-configurable
 )
 
 add_test(
-    NAME serialmac-non-configurable-init-test
-    COMMAND serialmac-non-configurable-init-test --gtest_output=xml:serialmac-non-configurable-init-test-xml
+    NAME ${TEST_SUITE_CONFIGURABLE_INIT_NAME}
+    COMMAND ${TEST_SUITE_CONFIGURABLE_INIT_NAME} --gtest_output=xml:${TEST_SUITE_CONFIGURABLE_INIT_NAME}-xml
 )
 
 #---------------------------------------------------------------------------------------
-# Tx test suite
+# Non-configurable library
 #---------------------------------------------------------------------------------------
-set(TEST_SUITE_TX_SOURCES
-    ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/sf_serialmac_test.cpp
+# set(TEST_SUITE_CONFIGURABLE_INIT_SOURCES
+#     ${CMAKE_CURRENT_SOURCE_DIR}/sf_serialmac_init_suite.cpp
+# )
+#
+# add_executable(serialmac-configurable-init-test
+#     ${TEST_SUITE_COMMON_SOURECES}
+#     ${TEST_SUITE_CONFIGURABLE_INIT_SOURCES}
+# )
+#
+# target_link_libraries(serialmac-configurable-init-test
+#     libgmock
+#     sfserialmac-configurable
+# )
+#
+# add_test(
+#     NAME serialmac-configurable-init-test
+#     COMMAND serialmac-configurable-init-test --gtest_output=xml:serialmac-configurable-init-test-xml
+# )
+
+#=======================================================================================
+# Transmission Test Suites
+#=======================================================================================
+
+#---------------------------------------------------------------------------------------
+# Configurable library with enabled inverted length field
+#---------------------------------------------------------------------------------------
+set(TEST_SUITE_CONFIGURABLE_INV_LENGTH_TX_NAME serialmac-configurable-inverted-length-tx-test-suite)
+
+set(TEST_SUITE_CONFIGURABLE_INV_LENGTH_TX_SOURCES
+    ${CMAKE_CURRENT_SOURCE_DIR}/sf_serialmac_inverted_length_test.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/sf_serialmac_tx_suite.cpp
 )
 
-add_executable(serialmac-non-configurable-tx-test ${TEST_SUITE_TX_SOURCES})
+add_executable(${TEST_SUITE_CONFIGURABLE_INV_LENGTH_TX_NAME}
+    ${TEST_SUITE_COMMON_SOURECES}
+    ${TEST_SUITE_CONFIGURABLE_INV_LENGTH_TX_SOURCES}
+)
 
-target_link_libraries(serialmac-non-configurable-tx-test
+target_link_libraries(${TEST_SUITE_CONFIGURABLE_INV_LENGTH_TX_NAME}
     libgmock
-    sfserialmac
+    sfserialmac-configurable
 )
 
 add_test(
-    NAME serialmac-non-configurable-tx-test
-    COMMAND serialmac-non-configurable-tx-test --gtest_output=xml:serialmac-non-configurable-tx-test-xml
+    NAME ${TEST_SUITE_CONFIGURABLE_INV_LENGTH_TX_NAME}
+    COMMAND ${TEST_SUITE_CONFIGURABLE_INV_LENGTH_TX_NAME} --gtest_output=xml:${TEST_SUITE_CONFIGURABLE_INV_LENGTH_TX_NAME}-xml
+)
+
+#---------------------------------------------------------------------------------------
+# Configurable library with disabled inverted length field
+#---------------------------------------------------------------------------------------
+set(TEST_SUITE_CONFIGURABLE_NO_INV_LENGTH_TX_NAME serialmac-configurable-no-inverted-length-tx-test-suite)
+
+set(TEST_SUITE_CONFIGURABLE_NO_INV_LENGTH_TX_SOURCES
+    ${CMAKE_CURRENT_SOURCE_DIR}/sf_serialmac_no_inverted_length_test.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/sf_serialmac_no_inverted_length_tx_suite.cpp
+)
+
+add_executable(${TEST_SUITE_CONFIGURABLE_NO_INV_LENGTH_TX_NAME}
+    ${TEST_SUITE_COMMON_SOURECES}
+    ${TEST_SUITE_CONFIGURABLE_NO_INV_LENGTH_TX_SOURCES}
+)
+
+target_link_libraries(${TEST_SUITE_CONFIGURABLE_NO_INV_LENGTH_TX_NAME}
+    libgmock
+    sfserialmac-configurable
+)
+
+add_test(
+    NAME ${TEST_SUITE_CONFIGURABLE_NO_INV_LENGTH_TX_NAME}
+    COMMAND ${TEST_SUITE_CONFIGURABLE_NO_INV_LENGTH_TX_NAME} --gtest_output=xml:${TEST_SUITE_CONFIGURABLE_NO_INV_LENGTH_TX_NAME}-xml
 )
