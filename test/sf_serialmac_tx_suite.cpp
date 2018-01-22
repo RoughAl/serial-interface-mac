@@ -10,17 +10,20 @@
  * @file
  * @copyright  STACKFORCE GmbH, Heitersheim, Germany, http://www.stackforce.de
  * @author     Adrian Antonana <adrian.antonana@stackforce.de>
- * @brief      Serial MAC unit tests class
+ * @brief      Serial MAC Tx test suite.
  */
 
 #include "sf_serialmac_test.h"
 #include "sf_serialmac.h"
 #include "sf_crc.h"
 
+/**
+ * @brief Test attempt to send with a NULL mac context.
+ */
 TEST_F(SerialMacTest, SendFrameWrongMacCtxt) {
 
     sf_serialmac_return macRet;
-    uint8_t txBuffer[3] = {0xAA, 0xBB, 0xCC};
+    uint8_t txBuffer[3] = {0xaa, 0xbb, 0xcc};
 
     InitSerialMac();
 
@@ -29,6 +32,9 @@ TEST_F(SerialMacTest, SendFrameWrongMacCtxt) {
     << "Frame tx should have failed";
 }
 
+/**
+ * @brief Test attempt to send with a NULL buffer.
+ */
 TEST_F(SerialMacTest, SendFrameWrongBuffer) {
 
     sf_serialmac_return macRet;
@@ -40,6 +46,9 @@ TEST_F(SerialMacTest, SendFrameWrongBuffer) {
     << "Frame tx should have failed";
 }
 
+/**
+ * @brief Test empty frame payload edge case.
+ */
 TEST_F(SerialMacTest, SendEmptyFrame) {
 
     sf_serialmac_return macRet;
@@ -73,6 +82,9 @@ TEST_F(SerialMacTest, SendEmptyFrame) {
     << "Unexpected frame sent";
 }
 
+/**
+ * @brief Test max possible frame payload edge case.
+ */
 TEST_F(SerialMacTest, SendMaxSizeFrame) {
 
     sf_serialmac_return macRet;
@@ -112,6 +124,12 @@ TEST_F(SerialMacTest, SendMaxSizeFrame) {
     << "Unexpected frame sent";
 }
 
+/**
+ * @brief Test correct mac frames are handled to the HAL callback.
+ *        The test produces frame payloads with size from 1 to MAX_TEST_PAYLOAD_LEN
+ *        and determines that for each generated payload the mac produces the correct
+ *        frame header, payload and CRC.
+ */
 TEST_F(SerialMacTest, SendFrame) {
 
     sf_serialmac_return macRet;

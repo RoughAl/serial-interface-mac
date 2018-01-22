@@ -10,13 +10,16 @@
  * @file
  * @copyright  STACKFORCE GmbH, Heitersheim, Germany, http://www.stackforce.de
  * @author     Adrian Antonana <adrian.antonana@stackforce.de>
- * @brief      Serial MAC unit tests class
+ * @brief      Serial MAC init test suite.
  */
 
 #include "sf_serialmac_test.h"
 #include "sf_serialmac.h"
 #include "sf_crc.h"
 
+/**
+ * @brief Test correct serial mac initialization.
+ */
 TEST_F(SerialMacTest, CorrectInit) {
 
     sf_serialmac_return macRet;
@@ -38,6 +41,9 @@ TEST_F(SerialMacTest, CorrectInit) {
     << "Failed to initialize serial mac";
 }
 
+/**
+ * @brief Test attempt to init with a NULL port handle.
+ */
 TEST_F(SerialMacTest, WrongPortHandleInit) {
 
     sf_serialmac_return macRet;
@@ -59,6 +65,9 @@ TEST_F(SerialMacTest, WrongPortHandleInit) {
     << "Mac init should have failed";
 }
 
+/**
+ * @brief Test attempt to init with a NULL HAL-read callback function.
+ */
 TEST_F(SerialMacTest, WrongHalReadInit) {
 
     sf_serialmac_return macRet;
@@ -80,6 +89,9 @@ TEST_F(SerialMacTest, WrongHalReadInit) {
     << "Mac init should have failed";
 }
 
+/**
+ * @brief Test attempt to init with a NULL HAL-bytes-waiting-for-read callback function.
+ */
 TEST_F(SerialMacTest, WrongHalReadWaitingInit) {
 
     sf_serialmac_return macRet;
@@ -101,6 +113,9 @@ TEST_F(SerialMacTest, WrongHalReadWaitingInit) {
     << "Mac init should have failed";
 }
 
+/**
+ * @brief Test attempt to init with a NULL HAL-write callback function.
+ */
 TEST_F(SerialMacTest, WrongHalWriteInit) {
 
     sf_serialmac_return macRet;
