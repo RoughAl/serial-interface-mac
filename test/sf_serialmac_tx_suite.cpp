@@ -13,14 +13,14 @@
  * @brief      Serial MAC Tx test suite.
  */
 
-#include "sf_serialmac_test.h"
+#include "sf_serialmac_inverted_length_test.h"
 #include "sf_serialmac.h"
 #include "sf_crc.h"
 
 /**
  * @brief Test attempt to send with a NULL mac context.
  */
-TEST_F(SerialMacTest, SendFrameWrongMacCtxt) {
+TEST_F(SerialMacInvertedLengthTest, SendFrameWrongMacCtxt) {
 
     sf_serialmac_return macRet;
     uint8_t txBuffer[3] = {0xaa, 0xbb, 0xcc};
@@ -35,7 +35,7 @@ TEST_F(SerialMacTest, SendFrameWrongMacCtxt) {
 /**
  * @brief Test attempt to send with a NULL buffer.
  */
-TEST_F(SerialMacTest, SendFrameWrongBuffer) {
+TEST_F(SerialMacInvertedLengthTest, SendFrameWrongBuffer) {
 
     sf_serialmac_return macRet;
 
@@ -49,7 +49,7 @@ TEST_F(SerialMacTest, SendFrameWrongBuffer) {
 /**
  * @brief Test empty frame payload edge case.
  */
-TEST_F(SerialMacTest, SendEmptyFrame) {
+TEST_F(SerialMacInvertedLengthTest, SendEmptyFrame) {
 
     sf_serialmac_return macRet;
     uint8_t txBuffer[1];
@@ -58,7 +58,7 @@ TEST_F(SerialMacTest, SendEmptyFrame) {
 
     expectedCrc = crc_calc_finalize(txBuffer, 0);
 
-    SerialMacTest::fullSentTestBuffer.clear();
+    SerialMacInvertedLengthTest::fullSentTestBuffer.clear();
     expectedTxFullBufferVector.clear();
     expectedTxFullBufferVector.push_back(SF_SERIALMAC_PROTOCOL_SYNC_WORD);
     expectedTxFullBufferVector.push_back(0x00);
@@ -78,14 +78,14 @@ TEST_F(SerialMacTest, SendEmptyFrame) {
     EXPECT_EQ(macRet, SF_SERIALMAC_RETURN_SUCCESS)
     << "Frame tx callback failed";
 
-    EXPECT_EQ(SerialMacTest::fullSentTestBuffer, expectedTxFullBufferVector)
+    EXPECT_EQ(SerialMacInvertedLengthTest::fullSentTestBuffer, expectedTxFullBufferVector)
     << "Unexpected frame sent";
 }
 
 /**
  * @brief Test max possible frame payload edge case.
  */
-TEST_F(SerialMacTest, SendMaxSizeFrame) {
+TEST_F(SerialMacInvertedLengthTest, SendMaxSizeFrame) {
 
     sf_serialmac_return macRet;
     uint8_t txBuffer[UINT16_MAX];
@@ -99,7 +99,7 @@ TEST_F(SerialMacTest, SendMaxSizeFrame) {
 
     expectedCrc = crc_calc_finalize(txBuffer, UINT16_MAX);
 
-    SerialMacTest::fullSentTestBuffer.clear();
+    SerialMacInvertedLengthTest::fullSentTestBuffer.clear();
     expectedTxFullBufferVector.clear();
     expectedTxFullBufferVector.push_back(SF_SERIALMAC_PROTOCOL_SYNC_WORD);
     expectedTxFullBufferVector.push_back(0xff);
@@ -120,7 +120,7 @@ TEST_F(SerialMacTest, SendMaxSizeFrame) {
     EXPECT_EQ(macRet, SF_SERIALMAC_RETURN_SUCCESS)
     << "Frame tx callback failed";
 
-    EXPECT_EQ(SerialMacTest::fullSentTestBuffer, expectedTxFullBufferVector)
+    EXPECT_EQ(SerialMacInvertedLengthTest::fullSentTestBuffer, expectedTxFullBufferVector)
     << "Unexpected frame sent";
 }
 
@@ -130,7 +130,7 @@ TEST_F(SerialMacTest, SendMaxSizeFrame) {
  *        and determines that for each generated payload the mac produces the correct
  *        frame header, payload and CRC.
  */
-TEST_F(SerialMacTest, SendFrame) {
+TEST_F(SerialMacInvertedLengthTest, SendFrame) {
 
     sf_serialmac_return macRet;
     uint8_t txBuffer[MAX_TEST_PAYLOAD_LEN];
@@ -144,7 +144,7 @@ TEST_F(SerialMacTest, SendFrame) {
         txBuffer[i] = (uint8_t)i;
         expectedCrc = crc_calc_finalize(txBuffer, i+1);
 
-        SerialMacTest::fullSentTestBuffer.clear();
+        SerialMacInvertedLengthTest::fullSentTestBuffer.clear();
         expectedTxFullBufferVector.clear();
         expectedTxFullBufferVector.push_back(SF_SERIALMAC_PROTOCOL_SYNC_WORD);
         expectedTxFullBufferVector.push_back((i+1) >> 8);
@@ -163,7 +163,7 @@ TEST_F(SerialMacTest, SendFrame) {
         EXPECT_EQ(macRet, SF_SERIALMAC_RETURN_SUCCESS)
         << "Frame tx callback failed";
 
-        EXPECT_EQ(SerialMacTest::fullSentTestBuffer, expectedTxFullBufferVector)
+        EXPECT_EQ(SerialMacInvertedLengthTest::fullSentTestBuffer, expectedTxFullBufferVector)
         << "Unexpected frame sent";
     }
 }
