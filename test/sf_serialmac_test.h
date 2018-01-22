@@ -25,7 +25,6 @@ class SerialMacTest : public ::testing::Test {
 
     public:
         static std::vector<uint8_t> fullSentTestBuffer;
-        static bool testingMacInit;
 
         static void ReadFrameCb(struct sf_serialmac_ctx *serialMacCtxt, uint8_t *buffer, size_t bufferSize);
         static void ReadBufferCb(struct sf_serialmac_ctx *serialMacCtxt, uint8_t *buffer, size_t bufferSize);

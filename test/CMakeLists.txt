@@ -31,19 +31,44 @@
 
 set (CMAKE_CXX_STANDARD 11)
 
-set(TEST_SOURCES
+#---------------------------------------------------------------------------------------
+# Init test suite
+#---------------------------------------------------------------------------------------
+set(TEST_SUITE_INIT_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/sf_serialmac_test.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/sf_serialmac_init_suite.cpp
 )
 
-add_executable(serialmac-non-configurable-test ${TEST_SOURCES})
+add_executable(serialmac-non-configurable-init-test ${TEST_SUITE_INIT_SOURCES})
 
-target_link_libraries(serialmac-non-configurable-test
+target_link_libraries(serialmac-non-configurable-init-test
     libgmock
     sfserialmac
 )
 
 add_test(
-    NAME serialmac-non-configurable-test
-    COMMAND serialmac-non-configurable-test --gtest_output=xml:serialmac-non-configurable-test-xml
+    NAME serialmac-non-configurable-init-test
+    COMMAND serialmac-non-configurable-init-test --gtest_output=xml:serialmac-non-configurable-init-test-xml
+)
+
+#---------------------------------------------------------------------------------------
+# Tx test suite
+#---------------------------------------------------------------------------------------
+set(TEST_SUITE_TX_SOURCES
+    ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/sf_serialmac_test.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/sf_serialmac_tx_suite.cpp
+)
+
+add_executable(serialmac-non-configurable-tx-test ${TEST_SUITE_TX_SOURCES})
+
+target_link_libraries(serialmac-non-configurable-tx-test
+    libgmock
+    sfserialmac
+)
+
+add_test(
+    NAME serialmac-non-configurable-tx-test
+    COMMAND serialmac-non-configurable-tx-test --gtest_output=xml:serialmac-non-configurable-tx-test-xml
 )
