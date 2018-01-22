@@ -31,10 +31,14 @@
 
 set (CMAKE_CXX_STANDARD 11)
 
+#---------------------------------------------------------------------------------------
+# Common sources
+#---------------------------------------------------------------------------------------
 set(TEST_SUITE_COMMON_SOURECES
     ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/sf_serialmac_test.cpp
 )
+
 #=======================================================================================
 # Initialization Test Suites
 #=======================================================================================
@@ -66,24 +70,26 @@ add_test(
 #---------------------------------------------------------------------------------------
 # Non-configurable library
 #---------------------------------------------------------------------------------------
-# set(TEST_SUITE_CONFIGURABLE_INIT_SOURCES
-#     ${CMAKE_CURRENT_SOURCE_DIR}/sf_serialmac_init_suite.cpp
-# )
-#
-# add_executable(serialmac-configurable-init-test
-#     ${TEST_SUITE_COMMON_SOURECES}
-#     ${TEST_SUITE_CONFIGURABLE_INIT_SOURCES}
-# )
-#
-# target_link_libraries(serialmac-configurable-init-test
-#     libgmock
-#     sfserialmac-configurable
-# )
-#
-# add_test(
-#     NAME serialmac-configurable-init-test
-#     COMMAND serialmac-configurable-init-test --gtest_output=xml:serialmac-configurable-init-test-xml
-# )
+set(TEST_SUITE_NO_CONFIGURABLE_INIT_NAME serialmac-no-configurable-init-test)
+
+set(TEST_SUITE_NO_CONFIGURABLE_INIT_SOURCES
+    ${CMAKE_CURRENT_SOURCE_DIR}/sf_serialmac_no_configurable_init_suite.cpp
+)
+
+add_executable(${TEST_SUITE_NO_CONFIGURABLE_INIT_NAME}
+    ${TEST_SUITE_COMMON_SOURECES}
+    ${TEST_SUITE_NO_CONFIGURABLE_INIT_SOURCES}
+)
+
+target_link_libraries(${TEST_SUITE_NO_CONFIGURABLE_INIT_NAME}
+    libgmock
+    sfserialmac
+)
+
+add_test(
+    NAME ${TEST_SUITE_NO_CONFIGURABLE_INIT_NAME}
+    COMMAND ${TEST_SUITE_NO_CONFIGURABLE_INIT_NAME} --gtest_output=xml:${TEST_SUITE_NO_CONFIGURABLE_INIT_NAME}-xml
+)
 
 #=======================================================================================
 # Transmission Test Suites
