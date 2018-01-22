@@ -96,7 +96,7 @@ set(TEST_SUITE_CONFIGURABLE_INV_LENGTH_TX_NAME serialmac-configurable-inverted-l
 
 set(TEST_SUITE_CONFIGURABLE_INV_LENGTH_TX_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/sf_serialmac_inverted_length_test.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/sf_serialmac_tx_suite.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/sf_serialmac_inverted_length_tx_suite.cpp
 )
 
 add_executable(${TEST_SUITE_CONFIGURABLE_INV_LENGTH_TX_NAME}
