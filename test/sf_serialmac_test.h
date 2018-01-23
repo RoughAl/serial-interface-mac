@@ -25,6 +25,11 @@ class SerialMacTest : public ::testing::Test {
 
     public:
         static std::vector<uint8_t> fullSentTestBuffer;
+        static size_t halRxBytesWaiting;
+        static std::vector<uint8_t> halBuffer;
+        static std::vector<uint8_t>::iterator itHalBuffer;
+        static uint8_t *payloadBuffer;
+        static std::vector<uint8_t> rxPayload;
 
         static void ReadFrameCb(struct sf_serialmac_ctx *serialMacCtxt, uint8_t *buffer, size_t bufferSize);
         static void ReadBufferCb(struct sf_serialmac_ctx *serialMacCtxt, uint8_t *buffer, size_t bufferSize);

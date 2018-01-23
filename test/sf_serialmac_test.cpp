@@ -20,6 +20,11 @@
 #include "sf_crc.h"
 
 std::vector<uint8_t> SerialMacTest::fullSentTestBuffer;
+size_t SerialMacTest::halRxBytesWaiting;
+std::vector<uint8_t> SerialMacTest::halBuffer;
+std::vector<uint8_t>::iterator SerialMacTest::itHalBuffer;
+uint8_t *SerialMacTest::payloadBuffer;
+std::vector<uint8_t> SerialMacTest::rxPayload;
 
 void SerialMacTest::ReadFrameCb(struct sf_serialmac_ctx *serialMacCtxt, uint8_t *buffer, size_t bufferSize) {
 
