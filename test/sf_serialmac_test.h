@@ -19,7 +19,7 @@
 #include "gtest/gtest.h"
 #include "sf_serialmac.h"
 
-#define MAX_TEST_PAYLOAD_LEN 10000
+#define MAX_TEST_PAYLOAD_LEN 1000
 // The fixture for testing class SerialMacTest
 class SerialMacTest : public ::testing::Test {
 
