@@ -48,6 +48,14 @@ void SerialMacTest::ReadSyncByteCb(struct sf_serialmac_ctx *serialMacCtxt, uint8
 
 size_t SerialMacTest::HalReadWaitingCb(void *portHandle) {
 
+    size_t halBufferRemainingBytes = 0;
+    std::vector<uint8_t>::iterator it;
+
+    for(it=SerialMacTest::itHalBuffer; it!=SerialMacTest::halBuffer.end(); it++) {
+        halBufferRemainingBytes++;
+    }
+
+    return halBufferRemainingBytes;
 };
 
 size_t SerialMacTest::HalReadCb(void *portHandle, uint8_t *buffer, size_t bufferSize) {
