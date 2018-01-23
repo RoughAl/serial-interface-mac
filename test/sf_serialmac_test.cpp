@@ -32,6 +32,11 @@ void SerialMacTest::ReadFrameCb(struct sf_serialmac_ctx *serialMacCtxt, uint8_t 
 
 void SerialMacTest::ReadBufferCb(struct sf_serialmac_ctx *serialMacCtxt, uint8_t *buffer, size_t bufferSize) {
 
+    SerialMacTest::payloadBuffer = (uint8_t*)std::malloc(bufferSize);
+
+    if(sf_serialmac_rx_frame(serialMacCtxt, SerialMacTest::payloadBuffer, bufferSize) != SF_SERIALMAC_RETURN_SUCCESS) {
+        std::cout << "sf_serialmac_rx_frame returned error" << std::endl;
+    }
 };
 
 void SerialMacTest::WriteFrameCb(struct sf_serialmac_ctx *serialMacCtxt, uint8_t *buffer, size_t bufferSize) {
