@@ -41,11 +41,11 @@ void SerialMacTest::ReadSyncByteCb(struct sf_serialmac_ctx *serialMacCtxt, uint8
 
 };
 
-void SerialMacTest::HalReadWaitingCb(void*) {
+size_t SerialMacTest::HalReadWaitingCb(void *portHandle) {
 
 };
 
-void SerialMacTest::HalReadCb(void *portHandle, uint8_t *buffer, size_t bufferSize) {
+size_t SerialMacTest::HalReadCb(void *portHandle, uint8_t *buffer, size_t bufferSize) {
 
 };
 

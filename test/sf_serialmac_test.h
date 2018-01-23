@@ -31,8 +31,8 @@ class SerialMacTest : public ::testing::Test {
         static void WriteFrameCb(struct sf_serialmac_ctx *serialMacCtxt, uint8_t *buffer, size_t bufferSize);
         static void WriteBufferCb(struct sf_serialmac_ctx *serialMacCtxt, uint8_t *buffer, size_t bufferSize);
         static void ReadSyncByteCb(struct sf_serialmac_ctx *serialMacCtxt, uint8_t *buffer, size_t bufferSize);
-        static void HalReadWaitingCb(void *portHandle);
-        static void HalReadCb(void *portHandle, uint8_t *buffer, size_t bufferSize);
+        static size_t HalReadWaitingCb(void *portHandle);
+        static size_t HalReadCb(void *portHandle, uint8_t *buffer, size_t bufferSize);
         static size_t HalWriteCb(void *portHandle, uint8_t *buffer, size_t bufferSize);
         static void MacErrorCb(void*, sf_serialmac_error e);
 
