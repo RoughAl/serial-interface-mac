@@ -60,6 +60,14 @@ size_t SerialMacTest::HalReadWaitingCb(void *portHandle) {
 
 size_t SerialMacTest::HalReadCb(void *portHandle, uint8_t *buffer, size_t bufferSize) {
 
+    int i;
+
+    for(i=0; i<bufferSize; i++) {
+        buffer[i] = *SerialMacTest::itHalBuffer;
+        SerialMacTest::itHalBuffer++;
+    }
+
+    return bufferSize;
 };
 
 size_t SerialMacTest::HalWriteCb(void *portHandle, uint8_t *buffer, size_t bufferSize) {
