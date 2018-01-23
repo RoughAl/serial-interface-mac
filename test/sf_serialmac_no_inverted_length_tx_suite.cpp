@@ -24,19 +24,9 @@ TEST_F(SerialMacNoInvertedLengthTest, SendEmptyFrame) {
 
     sf_serialmac_return macRet;
     uint8_t txBuffer[1];
-    std::vector<uint8_t> expectedTxFullBufferVector;
-    uint16_t expectedCrc;
 
-    expectedCrc = crc_calc_finalize(txBuffer, 0);
-
-    SerialMacNoInvertedLengthTest::fullSentTestBuffer.clear();
-    expectedTxFullBufferVector.clear();
-    expectedTxFullBufferVector.push_back(SF_SERIALMAC_PROTOCOL_SYNC_WORD);
-    expectedTxFullBufferVector.push_back(0x00);
-    expectedTxFullBufferVector.push_back(0x00);
-    expectedTxFullBufferVector.push_back(expectedCrc >> 8);
-    expectedTxFullBufferVector.push_back((uint8_t)(expectedCrc));
-
+    std::vector<uint8_t> txExpectedPayload;
+    SetupHalBuffer(txExpectedPayload);
     InitSerialMac();
 
     macRet = sf_serialmac_tx_frame(serialMacCtxt, 0, txBuffer, 0);
@@ -47,7 +37,7 @@ TEST_F(SerialMacNoInvertedLengthTest, SendEmptyFrame) {
     EXPECT_EQ(macRet, SF_SERIALMAC_RETURN_SUCCESS)
     << "Frame tx callback failed";
 
-    EXPECT_EQ(SerialMacNoInvertedLengthTest::fullSentTestBuffer, expectedTxFullBufferVector)
+    EXPECT_EQ(SerialMacNoInvertedLengthTest::fullSentTestBuffer, halBuffer)
     << "Unexpected frame sent";
 }
 
@@ -58,25 +48,16 @@ TEST_F(SerialMacNoInvertedLengthTest, SendMaxSizeFrame) {
 
     sf_serialmac_return macRet;
     uint8_t txBuffer[UINT16_MAX];
-    std::vector<uint8_t> expectedTxFullBufferVector;
-    uint16_t expectedCrc;
+    std::vector<uint8_t> txExpectedPayload;
     uint16_t i;
 
     for(i=0; i<UINT16_MAX; i++) {
         txBuffer[i] = (uint8_t)i;
     }
 
-    expectedCrc = crc_calc_finalize(txBuffer, UINT16_MAX);
-
+    txExpectedPayload.assign(txBuffer, txBuffer + UINT16_MAX);
     SerialMacNoInvertedLengthTest::fullSentTestBuffer.clear();
-    expectedTxFullBufferVector.clear();
-    expectedTxFullBufferVector.push_back(SF_SERIALMAC_PROTOCOL_SYNC_WORD);
-    expectedTxFullBufferVector.push_back(0xff);
-    expectedTxFullBufferVector.push_back(0xff);
-    expectedTxFullBufferVector.insert(expectedTxFullBufferVector.end(), txBuffer, txBuffer+UINT16_MAX);
-    expectedTxFullBufferVector.push_back(expectedCrc >> 8);
-    expectedTxFullBufferVector.push_back((uint8_t)(expectedCrc));
-
+    SetupHalBuffer(txExpectedPayload);
     InitSerialMac();
 
     macRet = sf_serialmac_tx_frame(serialMacCtxt, UINT16_MAX, txBuffer, UINT16_MAX);
@@ -87,7 +68,7 @@ TEST_F(SerialMacNoInvertedLengthTest, SendMaxSizeFrame) {
     EXPECT_EQ(macRet, SF_SERIALMAC_RETURN_SUCCESS)
     << "Frame tx callback failed";
 
-    EXPECT_EQ(SerialMacNoInvertedLengthTest::fullSentTestBuffer, expectedTxFullBufferVector)
+    EXPECT_EQ(SerialMacNoInvertedLengthTest::fullSentTestBuffer, halBuffer)
     << "Unexpected frame sent";
 }
 
@@ -101,24 +82,16 @@ TEST_F(SerialMacNoInvertedLengthTest, SendFrame) {
 
     sf_serialmac_return macRet;
     uint8_t txBuffer[MAX_TEST_PAYLOAD_LEN];
-    std::vector<uint8_t> expectedTxFullBufferVector;
+    std::vector<uint8_t> txExpectedPayload;
     uint16_t i;
-    uint16_t expectedCrc;
 
     InitSerialMac();
 
     for(i=0; i<MAX_TEST_PAYLOAD_LEN; i++) {
         txBuffer[i] = (uint8_t)i;
-        expectedCrc = crc_calc_finalize(txBuffer, i+1);
-
+        txExpectedPayload.push_back((uint8_t)i);
+        SetupHalBuffer(txExpectedPayload);
         SerialMacNoInvertedLengthTest::fullSentTestBuffer.clear();
-        expectedTxFullBufferVector.clear();
-        expectedTxFullBufferVector.push_back(SF_SERIALMAC_PROTOCOL_SYNC_WORD);
-        expectedTxFullBufferVector.push_back((i+1) >> 8);
-        expectedTxFullBufferVector.push_back((uint8_t)(i+1));
-        expectedTxFullBufferVector.insert(expectedTxFullBufferVector.end(), txBuffer, txBuffer+i+1);
-        expectedTxFullBufferVector.push_back(expectedCrc >> 8);
-        expectedTxFullBufferVector.push_back((uint8_t)(expectedCrc));
 
         macRet = sf_serialmac_tx_frame(serialMacCtxt, i+1, txBuffer, i+1);
         EXPECT_EQ(macRet, SF_SERIALMAC_RETURN_SUCCESS)
@@ -128,7 +101,7 @@ TEST_F(SerialMacNoInvertedLengthTest, SendFrame) {
         EXPECT_EQ(macRet, SF_SERIALMAC_RETURN_SUCCESS)
         << "Frame tx callback failed";
 
-        EXPECT_EQ(SerialMacNoInvertedLengthTest::fullSentTestBuffer, expectedTxFullBufferVector)
+        EXPECT_EQ(SerialMacNoInvertedLengthTest::fullSentTestBuffer, halBuffer)
         << "Unexpected frame sent";
     }
 }
