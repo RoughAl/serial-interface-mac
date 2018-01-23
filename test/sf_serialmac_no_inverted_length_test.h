@@ -20,4 +20,6 @@ class SerialMacNoInvertedLengthTest : public SerialMacTest {
     public:
         SerialMacNoInvertedLengthTest();
         virtual ~SerialMacNoInvertedLengthTest();
+
+        void SetupHalBuffer(const std::vector<uint8_t> payload) override;
 };
