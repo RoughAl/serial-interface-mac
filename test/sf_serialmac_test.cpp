@@ -28,6 +28,10 @@ std::vector<uint8_t> SerialMacTest::rxPayload;
 
 void SerialMacTest::ReadFrameCb(struct sf_serialmac_ctx *serialMacCtxt, uint8_t *buffer, size_t bufferSize) {
 
+    SerialMacTest::rxPayload.clear();
+    SerialMacTest::rxPayload.assign(buffer, buffer + bufferSize);
+
+    std::free(SerialMacTest::payloadBuffer);
 };
 
 void SerialMacTest::ReadBufferCb(struct sf_serialmac_ctx *serialMacCtxt, uint8_t *buffer, size_t bufferSize) {
