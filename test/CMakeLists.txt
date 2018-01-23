@@ -49,6 +49,7 @@ set(TEST_SUITE_COMMON_SOURECES
 set(TEST_SUITE_CONFIGURABLE_INIT_NAME serialmac-configurable-init-test-suite)
 
 set(TEST_SUITE_CONFIGURABLE_INIT_SOURCES
+    ${CMAKE_CURRENT_SOURCE_DIR}/sf_serialmac_inverted_length_test.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/sf_serialmac_init_suite.cpp
 )
 
@@ -73,6 +74,7 @@ add_test(
 set(TEST_SUITE_NO_CONFIGURABLE_INIT_NAME serialmac-no-configurable-init-test)
 
 set(TEST_SUITE_NO_CONFIGURABLE_INIT_SOURCES
+    ${CMAKE_CURRENT_SOURCE_DIR}/sf_serialmac_inverted_length_test.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/sf_serialmac_no_configurable_init_suite.cpp
 )
 
