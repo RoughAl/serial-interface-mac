@@ -65,5 +65,7 @@ class SerialMacTest : public ::testing::Test {
         void *dummyPortHandle;
         void InitSerialMac();
 
+        // Setup a HAL buffer for the given payload.
+        virtual void SetupHalBuffer(const std::vector<uint8_t> payload) = 0;
 };
 

@@ -13,28 +13,28 @@
  * @brief      Non configurable Serial MAC init test suite.
  */
 
-#include "sf_serialmac_test.h"
+#include "sf_serialmac_inverted_length_test.h"
 #include "sf_serialmac.h"
 #include "sf_crc.h"
 
 /**
  * @brief Test to initialize the allowed inverted field value.
  */
-TEST_F(SerialMacTest, CorrectInit) {
+TEST_F(SerialMacInvertedLengthTest, CorrectInit) {
 
     sf_serialmac_return macRet;
 
     macRet = sf_serialmac_init (serialMacCtxt,
                                 dummyPortHandle,
-                                (SF_SERIALMAC_HAL_READ_FUNCTION) SerialMacTest::HalReadCb,
-                                (SF_SERIALMAC_HAL_READ_WAIT_FUNCTION) SerialMacTest::HalReadWaitingCb,
-                                (SF_SERIALMAC_HAL_WRITE_FUNCTION) SerialMacTest::HalWriteCb,
-                                (SF_SERIALMAC_EVENT) SerialMacTest::ReadFrameCb,
-                                (SF_SERIALMAC_EVENT) SerialMacTest::ReadBufferCb,
-                                (SF_SERIALMAC_EVENT) SerialMacTest::ReadSyncByteCb,
-                                (SF_SERIALMAC_EVENT) SerialMacTest::WriteFrameCb,
-                                (SF_SERIALMAC_EVENT) SerialMacTest::WriteBufferCb,
-                                (SF_SERIALMAC_EVENT_ERROR) SerialMacTest::MacErrorCb,
+                                (SF_SERIALMAC_HAL_READ_FUNCTION) SerialMacInvertedLengthTest::HalReadCb,
+                                (SF_SERIALMAC_HAL_READ_WAIT_FUNCTION) SerialMacInvertedLengthTest::HalReadWaitingCb,
+                                (SF_SERIALMAC_HAL_WRITE_FUNCTION) SerialMacInvertedLengthTest::HalWriteCb,
+                                (SF_SERIALMAC_EVENT) SerialMacInvertedLengthTest::ReadFrameCb,
+                                (SF_SERIALMAC_EVENT) SerialMacInvertedLengthTest::ReadBufferCb,
+                                (SF_SERIALMAC_EVENT) SerialMacInvertedLengthTest::ReadSyncByteCb,
+                                (SF_SERIALMAC_EVENT) SerialMacInvertedLengthTest::WriteFrameCb,
+                                (SF_SERIALMAC_EVENT) SerialMacInvertedLengthTest::WriteBufferCb,
+                                (SF_SERIALMAC_EVENT_ERROR) SerialMacInvertedLengthTest::MacErrorCb,
                                 true);
 
     EXPECT_EQ(macRet, SF_SERIALMAC_RETURN_SUCCESS)
@@ -44,21 +44,21 @@ TEST_F(SerialMacTest, CorrectInit) {
 /**
  * @brief Test attempt to initialize the inverted field to not allowed value.
  */
-TEST_F(SerialMacTest, WrongInvertedLengthInit) {
+TEST_F(SerialMacInvertedLengthTest, WrongInvertedLengthInit) {
 
     sf_serialmac_return macRet;
 
     macRet = sf_serialmac_init (serialMacCtxt,
                                 dummyPortHandle,
-                                (SF_SERIALMAC_HAL_READ_FUNCTION) SerialMacTest::HalReadCb,
-                                (SF_SERIALMAC_HAL_READ_WAIT_FUNCTION) SerialMacTest::HalReadWaitingCb,
-                                (SF_SERIALMAC_HAL_WRITE_FUNCTION) SerialMacTest::HalWriteCb,
-                                (SF_SERIALMAC_EVENT) SerialMacTest::ReadFrameCb,
-                                (SF_SERIALMAC_EVENT) SerialMacTest::ReadBufferCb,
-                                (SF_SERIALMAC_EVENT) SerialMacTest::ReadSyncByteCb,
-                                (SF_SERIALMAC_EVENT) SerialMacTest::WriteFrameCb,
-                                (SF_SERIALMAC_EVENT) SerialMacTest::WriteBufferCb,
-                                (SF_SERIALMAC_EVENT_ERROR) SerialMacTest::MacErrorCb,
+                                (SF_SERIALMAC_HAL_READ_FUNCTION) SerialMacInvertedLengthTest::HalReadCb,
+                                (SF_SERIALMAC_HAL_READ_WAIT_FUNCTION) SerialMacInvertedLengthTest::HalReadWaitingCb,
+                                (SF_SERIALMAC_HAL_WRITE_FUNCTION) SerialMacInvertedLengthTest::HalWriteCb,
+                                (SF_SERIALMAC_EVENT) SerialMacInvertedLengthTest::ReadFrameCb,
+                                (SF_SERIALMAC_EVENT) SerialMacInvertedLengthTest::ReadBufferCb,
+                                (SF_SERIALMAC_EVENT) SerialMacInvertedLengthTest::ReadSyncByteCb,
+                                (SF_SERIALMAC_EVENT) SerialMacInvertedLengthTest::WriteFrameCb,
+                                (SF_SERIALMAC_EVENT) SerialMacInvertedLengthTest::WriteBufferCb,
+                                (SF_SERIALMAC_EVENT_ERROR) SerialMacInvertedLengthTest::MacErrorCb,
                                 false);
 
     EXPECT_EQ(macRet, SF_SERIALMAC_RETURN_UNSUPPORTED_PARAMETER)
