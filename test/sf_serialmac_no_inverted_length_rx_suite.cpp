@@ -65,3 +65,28 @@ TEST_F(SerialMacNoInvertedLengthTest, ReceiveFrames) {
         << "Received unexpected payload";
     }
 }
+
+/**
+ * @brief Test receiving frames with wrong crc.
+ */
+TEST_F(SerialMacNoInvertedLengthTest, ReceiveFramesWrongCrc) {
+
+    sf_serialmac_return macRet;
+    std::vector<uint8_t> rxPayload;
+    uint16_t i;
+
+    for(i=0; i<UINT16_MAX; i++) {
+        rxPayload.push_back((uint8_t)i);
+    }
+
+    SetupHalBuffer(rxPayload);
+    halBuffer.at(halBuffer.back())--;
+    InitSerialMac();
+
+    macRet = sf_serialmac_hal_rx_callback(serialMacCtxt);
+    EXPECT_EQ(macRet, SF_SERIALMAC_RETURN_SUCCESS)
+    << "HAL Rx callback failed";
+
+    EXPECT_EQ(macError, SF_SERIALMAC_ERROR_INVALID_CRC)
+    << "Crc field verification should have failed";
+}
