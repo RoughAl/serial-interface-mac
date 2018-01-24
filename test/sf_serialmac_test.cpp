@@ -25,6 +25,7 @@ std::vector<uint8_t> SerialMacTest::halBuffer;
 std::vector<uint8_t>::iterator SerialMacTest::itHalBuffer;
 uint8_t *SerialMacTest::payloadBuffer;
 std::vector<uint8_t> SerialMacTest::rxPayload;
+enum sf_serialmac_error SerialMacTest::macError;
 
 void SerialMacTest::ReadFrameCb(struct sf_serialmac_ctx *serialMacCtxt, uint8_t *buffer, size_t bufferSize) {
 
@@ -87,6 +88,7 @@ size_t SerialMacTest::HalWriteCb(void *portHandle, uint8_t *buffer, size_t buffe
 
 void SerialMacTest::MacErrorCb(void*, sf_serialmac_error e) {
 
+    macError = e;
 };
 
 SerialMacTest::SerialMacTest() {
