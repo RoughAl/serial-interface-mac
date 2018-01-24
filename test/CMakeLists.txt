@@ -50,7 +50,7 @@ set(TEST_SUITE_CONFIGURABLE_INIT_NAME serialmac-configurable-init-test-suite)
 
 set(TEST_SUITE_CONFIGURABLE_INIT_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/sf_serialmac_inverted_length_test.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/sf_serialmac_init_suite.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/sf_serialmac_configurable_init_suite.cpp
 )
 
 add_executable(${TEST_SUITE_CONFIGURABLE_INIT_NAME}
