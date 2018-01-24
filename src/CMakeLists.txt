@@ -32,34 +32,6 @@
 ##
 
 #---------------------------------------------------------------------------------------
-# Include required modules
-#---------------------------------------------------------------------------------------
-include(GNUInstallDirs)
-include(CMakePackageConfigHelpers)
-
-#---------------------------------------------------------------------------------------
-# Required dependencies versions
-#---------------------------------------------------------------------------------------
-set(SFCRC_VERSION 0.1.3)
-
-#---------------------------------------------------------------------------------------
-# Find required packages
-#---------------------------------------------------------------------------------------
-find_package(sfcrc ${SFCRC_VERSION} REQUIRED)
-get_target_property(CRC_INCLUDE_DIRS sfcrc INTERFACE_INCLUDE_DIRECTORIES)
-
-#---------------------------------------------------------------------------------------
-# Options
-#---------------------------------------------------------------------------------------
-option(BUILD_DOC "Create and install the HTML based API documentation")
-
-#---------------------------------------------------------------------------------------
-# Product info
-#---------------------------------------------------------------------------------------
-set(PROJECT_PRODUCT_COMPANY "STACKFORCE" CACHE STRING "company")
-set(PROJECT_PRODUCT_NAME    "Serial MAC" CACHE STRING "product")
-
-#---------------------------------------------------------------------------------------
 # Serialmac headers and sources
 #---------------------------------------------------------------------------------------
 set(SERIALMAC_SOURCES
@@ -81,7 +53,7 @@ add_library(sfserialmac_o OBJECT ${SERIALMAC_SOURCES})
 add_library(sfserialmac SHARED $<TARGET_OBJECTS:sfserialmac_o>)
 add_library(sfserialmac-static STATIC $<TARGET_OBJECTS:sfserialmac_o>)
 
-target_include_directories(sfserialmac_o PRIVATE ${CRC_INCLUDE_DIRS})
+target_include_directories(sfserialmac_o PRIVATE $<TARGET_PROPERTY:sfcrc,INTERFACE_INCLUDE_DIRECTORIES>)
 
 set_target_properties(sfserialmac_o PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
 
@@ -111,7 +83,7 @@ target_compile_definitions(sfserialmac-configurable_o PRIVATE SF_SERIALMAC_INVER
 add_library(sfserialmac-configurable SHARED $<TARGET_OBJECTS:sfserialmac-configurable_o>)
 add_library(sfserialmac-configurable-static STATIC $<TARGET_OBJECTS:sfserialmac-configurable_o>)
 
-target_include_directories(sfserialmac-configurable_o PRIVATE ${CRC_INCLUDE_DIRS})
+target_include_directories(sfserialmac-configurable_o PRIVATE $<TARGET_PROPERTY:sfcrc,INTERFACE_INCLUDE_DIRECTORIES>)
 
 set_target_properties(sfserialmac-configurable_o PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
 
