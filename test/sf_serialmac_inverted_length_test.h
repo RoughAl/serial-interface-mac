@@ -15,11 +15,29 @@
 
 #include "sf_serialmac_test.h"
 
+/**
+ * This class is specialized for the inverted-length-field-enabled tests. The
+ * class constructor sets the invertedLengthField attribute to true. In addition
+ * the SetupHalBuffer() creates the full HAL buffer with the extra inverted
+ * length field.
+ *
+ * The frames tested with this class follow this format:
+ *
+ *       +-------+--------+------------+------------------+--------+
+ * FIELD | SYNC  | LENGTH | INV_LENGTH |      PAYLOAD     |   CRC  |
+ *       +-------+--------+------------+------------------+--------+
+ * SIZE  | 1Byte | 2Bytes |   2Bytes   | 65535Bytes (MAX) | 2Bytes |
+ *       +-------+--------+------------+------------------+--------+
+ */
+
 class SerialMacInvertedLengthTest : public SerialMacTest {
 
     public:
         SerialMacInvertedLengthTest();
         virtual ~SerialMacInvertedLengthTest();
 
+        /**
+         * Creates a HALL buffer with inverted length field in the header.
+         */
         void SetupHalBuffer(const std::vector<uint8_t> payload) override;
 };

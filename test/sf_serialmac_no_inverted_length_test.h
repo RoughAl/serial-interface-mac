@@ -15,6 +15,21 @@
 
 #include "sf_serialmac_test.h"
 
+/**
+ * This class is specialized for the inverted-length-field-disabled tests. The
+ * class constructor sets the invertedLengthField attribute to false. In addition
+ * the SetupHalBuffer() creates the full HAL buffer without the extra inverted
+ * length field.
+ *
+ * The frames tested with this class follow this format:
+ *
+ *       +-------+--------+------------------+--------+
+ * FIELD | SYNC  | LENGTH |     PAYLOAD      |   CRC  |
+ *       +-------+--------+------------------+--------+
+ * SIZE  | 1Byte | 2Bytes | 65535Bytes (MAX) | 2Bytes |
+ *       +-------+--------+------------------+--------+
+ */
+
 class SerialMacNoInvertedLengthTest : public SerialMacTest {
 
     public:

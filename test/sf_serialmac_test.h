@@ -10,7 +10,7 @@
  * @file
  * @copyright  STACKFORCE GmbH, Heitersheim, Germany, http://www.stackforce.de
  * @author     Adrian Antonana <adrian.antonana@stackforce.de>
- * @brief      Serial MAC unit tests class
+ * @brief      Serial MAC unit tests base class
  */
 
 #include <iostream>
@@ -20,7 +20,12 @@
 #include "sf_serialmac.h"
 
 #define MAX_TEST_PAYLOAD_LEN 1000
-// The fixture for testing class SerialMacTest
+
+/**
+ * The base test class is an interface class, therefore it may not be used directly
+ * as a test fixture.
+ * Child classes inheriting from this one have to implement the SetupHalBuffer() method.
+ */
 class SerialMacTest : public ::testing::Test {
 
     public:
@@ -32,6 +37,7 @@ class SerialMacTest : public ::testing::Test {
         static std::vector<uint8_t> rxPayload;
         static enum sf_serialmac_error macError;
 
+        // Serial MAC callback functions to be registered by the MAC's init function.
         static void ReadFrameCb(struct sf_serialmac_ctx *serialMacCtxt, uint8_t *buffer, size_t bufferSize);
         static void ReadBufferCb(struct sf_serialmac_ctx *serialMacCtxt, uint8_t *buffer, size_t bufferSize);
         static void WriteFrameCb(struct sf_serialmac_ctx *serialMacCtxt, uint8_t *buffer, size_t bufferSize);
@@ -61,12 +67,22 @@ class SerialMacTest : public ::testing::Test {
         // before the destructor).
         virtual void TearDown();
 
+        // The serial MAC context.
         struct sf_serialmac_ctx *serialMacCtxt;
+
+        // Enable/Disable the inverted length field.
         bool invertedLengthField;
+
+        // Dummy HAL port handle.
         void *dummyPortHandle;
+
+        // Initialize the serial mac.
         void InitSerialMac();
 
-        // Setup a HAL buffer for the given payload.
+        /**
+         * Setup a HAL buffer for the given payload. This method has to be implemented by child
+         * tests classes depending on the inverted length field having to be activated or not.
+         */
         virtual void SetupHalBuffer(const std::vector<uint8_t> payload) = 0;
 };
 
