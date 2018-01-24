@@ -18,9 +18,9 @@
 #include "sf_crc.h"
 
 /**
- * @brief Test correct serial mac initialization.
+ * @brief Test correct serial mac initialization with enabled inverted lenght field.
  */
-TEST_F(SerialMacInvertedLengthTest, CorrectInit) {
+TEST_F(SerialMacInvertedLengthTest, CorrectInitInvertedLength) {
 
     sf_serialmac_return macRet;
 
@@ -35,7 +35,31 @@ TEST_F(SerialMacInvertedLengthTest, CorrectInit) {
                                 (SF_SERIALMAC_EVENT) WriteFrameCb,
                                 (SF_SERIALMAC_EVENT) WriteBufferCb,
                                 (SF_SERIALMAC_EVENT_ERROR) MacErrorCb,
-                                invertedLengthField);
+                                true);
+
+    EXPECT_EQ(macRet, SF_SERIALMAC_RETURN_SUCCESS)
+    << "Failed to initialize serial mac";
+}
+
+/**
+ * @brief Test correct serial mac initialization with disabled inverted lenght field.
+ */
+TEST_F(SerialMacInvertedLengthTest, CorrectInitNoInvertedLength) {
+
+    sf_serialmac_return macRet;
+
+    macRet = sf_serialmac_init (serialMacCtxt,
+                                dummyPortHandle,
+                                (SF_SERIALMAC_HAL_READ_FUNCTION) HalReadCb,
+                                (SF_SERIALMAC_HAL_READ_WAIT_FUNCTION) HalReadWaitingCb,
+                                (SF_SERIALMAC_HAL_WRITE_FUNCTION) HalWriteCb,
+                                (SF_SERIALMAC_EVENT) ReadFrameCb,
+                                (SF_SERIALMAC_EVENT) ReadBufferCb,
+                                (SF_SERIALMAC_EVENT) ReadSyncByteCb,
+                                (SF_SERIALMAC_EVENT) WriteFrameCb,
+                                (SF_SERIALMAC_EVENT) WriteBufferCb,
+                                (SF_SERIALMAC_EVENT_ERROR) MacErrorCb,
+                                false);
 
     EXPECT_EQ(macRet, SF_SERIALMAC_RETURN_SUCCESS)
     << "Failed to initialize serial mac";
