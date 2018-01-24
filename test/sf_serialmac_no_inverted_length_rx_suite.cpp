@@ -37,7 +37,7 @@ TEST_F(SerialMacNoInvertedLengthTest, ReceiveMaxSizeFrame) {
     EXPECT_EQ(macRet, SF_SERIALMAC_RETURN_SUCCESS)
     << "HAL Rx callback failed";
 
-    EXPECT_EQ(rxExpectedPayload, SerialMacNoInvertedLengthTest::rxPayload)
+    EXPECT_EQ(rxExpectedPayload, rxPayload)
     << "Received unexpected payload";
 }
 
@@ -61,7 +61,7 @@ TEST_F(SerialMacNoInvertedLengthTest, ReceiveFrames) {
         EXPECT_EQ(macRet, SF_SERIALMAC_RETURN_SUCCESS)
         << "HAL Rx callback failed";
 
-        EXPECT_EQ(rxExpectedPayload, SerialMacNoInvertedLengthTest::rxPayload)
+        EXPECT_EQ(rxExpectedPayload, rxPayload)
         << "Received unexpected payload";
     }
 }
