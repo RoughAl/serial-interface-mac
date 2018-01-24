@@ -113,5 +113,5 @@ TEST_F(SerialMacInvertedLengthTest, ReceiveFramesWrongCrc) {
     << "HAL Rx callback failed";
 
     EXPECT_EQ(macError, SF_SERIALMAC_ERROR_INVALID_CRC)
-    << "Inverted length field verification should have failed";
+    << "Crc verification should have failed";
 }
