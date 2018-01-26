@@ -85,7 +85,7 @@ TEST_F(SerialMacInvertedLengthTest, WrongPortHandleInit) {
                                     (SF_SERIALMAC_EVENT_ERROR) MacErrorCb,
                                     invertedLengthField);
 
-    EXPECT_NE(macRet, SF_SERIALMAC_RETURN_SUCCESS)
+    EXPECT_EQ(macRet, SF_SERIALMAC_RETURN_ERROR_NPE)
     << "Mac init should have failed";
 }
 
@@ -109,7 +109,7 @@ TEST_F(SerialMacInvertedLengthTest, WrongHalReadInit) {
                                     (SF_SERIALMAC_EVENT_ERROR) MacErrorCb,
                                     invertedLengthField);
 
-    EXPECT_NE(macRet, SF_SERIALMAC_RETURN_SUCCESS)
+    EXPECT_EQ(macRet, SF_SERIALMAC_RETURN_ERROR_NPE)
     << "Mac init should have failed";
 }
 
@@ -133,7 +133,7 @@ TEST_F(SerialMacInvertedLengthTest, WrongHalReadWaitingInit) {
                                     (SF_SERIALMAC_EVENT_ERROR) MacErrorCb,
                                     invertedLengthField);
 
-    EXPECT_NE(macRet, SF_SERIALMAC_RETURN_SUCCESS)
+    EXPECT_EQ(macRet, SF_SERIALMAC_RETURN_ERROR_NPE)
     << "Mac init should have failed";
 }
 
@@ -157,7 +157,7 @@ TEST_F(SerialMacInvertedLengthTest, WrongHalWriteInit) {
                                     (SF_SERIALMAC_EVENT_ERROR) MacErrorCb,
                                     invertedLengthField);
 
-    EXPECT_NE(macRet, SF_SERIALMAC_RETURN_SUCCESS)
+    EXPECT_EQ(macRet, SF_SERIALMAC_RETURN_ERROR_NPE)
     << "Mac init should have failed";
 }
 
@@ -181,7 +181,7 @@ TEST_F(SerialMacInvertedLengthTest, WrongReadFrameInit) {
                                     (SF_SERIALMAC_EVENT_ERROR) MacErrorCb,
                                     invertedLengthField);
 
-    EXPECT_NE(macRet, SF_SERIALMAC_RETURN_SUCCESS)
+    EXPECT_EQ(macRet, SF_SERIALMAC_RETURN_ERROR_NPE)
     << "Mac init should have failed";
 }
 
@@ -205,7 +205,7 @@ TEST_F(SerialMacInvertedLengthTest, WrongReadBufferInit) {
                                     (SF_SERIALMAC_EVENT_ERROR) MacErrorCb,
                                     invertedLengthField);
 
-    EXPECT_NE(macRet, SF_SERIALMAC_RETURN_SUCCESS)
+    EXPECT_EQ(macRet, SF_SERIALMAC_RETURN_ERROR_NPE)
     << "Mac init should have failed";
 }
 
@@ -229,7 +229,7 @@ TEST_F(SerialMacInvertedLengthTest, WrongReadSyncByteInit) {
                                 (SF_SERIALMAC_EVENT_ERROR) MacErrorCb,
                                 invertedLengthField);
 
-    EXPECT_NE(macRet, SF_SERIALMAC_RETURN_SUCCESS)
+    EXPECT_EQ(macRet, SF_SERIALMAC_RETURN_ERROR_NPE)
     << "Mac init should have failed";
 }
 
@@ -253,7 +253,7 @@ TEST_F(SerialMacInvertedLengthTest, WrongWriteFrameInit) {
                                 (SF_SERIALMAC_EVENT_ERROR) MacErrorCb,
                                 invertedLengthField);
 
-    EXPECT_NE(macRet, SF_SERIALMAC_RETURN_SUCCESS)
+    EXPECT_EQ(macRet, SF_SERIALMAC_RETURN_ERROR_NPE)
     << "Mac init should have failed";
 }
 
@@ -277,7 +277,7 @@ TEST_F(SerialMacInvertedLengthTest, WrongWriteBufferInit) {
                                 (SF_SERIALMAC_EVENT_ERROR) MacErrorCb,
                                 invertedLengthField);
 
-    EXPECT_NE(macRet, SF_SERIALMAC_RETURN_SUCCESS)
+    EXPECT_EQ(macRet, SF_SERIALMAC_RETURN_ERROR_NPE)
     << "Mac init should have failed";
 }
 
@@ -301,6 +301,6 @@ TEST_F(SerialMacInvertedLengthTest, WrongErrorInit) {
                                 NULL,
                                 invertedLengthField);
 
-    EXPECT_NE(macRet, SF_SERIALMAC_RETURN_SUCCESS)
+    EXPECT_EQ(macRet, SF_SERIALMAC_RETURN_ERROR_NPE)
     << "Mac init should have failed";
 }

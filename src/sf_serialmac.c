@@ -392,7 +392,8 @@ enum sf_serialmac_return sf_serialmac_init ( struct sf_serialmac_ctx *ctx,
         SF_SERIALMAC_EVENT_ERROR error_event,
         bool useInvertedLengthField)
 {
-    if ( !ctx ) {
+    if ( !ctx || !portHandle || !read || !readWaiting || !write || !rxEvt ||
+        !rxBufEvt || !rxSyncEvt || !txEvt || !txBufEvt || !error_event ) {
         return SF_SERIALMAC_RETURN_ERROR_NPE;
     }
 
