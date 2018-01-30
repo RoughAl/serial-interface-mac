@@ -40,23 +40,25 @@ void MacErrorCb(struct sf_serialmac_ctx *serialMacCtxt, sf_serialmac_error e);
  * Mac callbacks interface class.
  */
 class MacCallbacks {
+
     public:
-    virtual ~MacCallbacks() {}
-    virtual size_t HalReadCb(void *portHandle, uint8_t *buffer, size_t bufferSize) = 0;
-    virtual size_t HalReadWaitingCb(void *portHandle) = 0;
-    virtual size_t HalWriteCb(void *portHandle, uint8_t *buffer, size_t bufferSize) = 0;
-    virtual void MacErrorCb(struct sf_serialmac_ctx *serialMacCtxt, sf_serialmac_error e) = 0;
-    virtual void ReadBufferCb(struct sf_serialmac_ctx *serialMacCtxt, uint8_t *buffer, size_t bufferSize) = 0;
-    virtual void ReadSyncByteCb(struct sf_serialmac_ctx *serialMacCtxt, uint8_t *buffer, size_t bufferSize) = 0;
-    virtual void WriteBufferCb(struct sf_serialmac_ctx *serialMacCtxt, uint8_t *buffer, size_t bufferSize) = 0;
-    virtual void WriteFrameCb(struct sf_serialmac_ctx *serialMacCtxt, uint8_t *buffer, size_t bufferSize) = 0;
-    virtual void ReadFrameCb(struct sf_serialmac_ctx *serialMacCtxt, uint8_t *buffer, size_t bufferSize) = 0;
+        virtual ~MacCallbacks() {}
+        virtual size_t HalReadCb(void *portHandle, uint8_t *buffer, size_t bufferSize) = 0;
+        virtual size_t HalReadWaitingCb(void *portHandle) = 0;
+        virtual size_t HalWriteCb(void *portHandle, uint8_t *buffer, size_t bufferSize) = 0;
+        virtual void MacErrorCb(struct sf_serialmac_ctx *serialMacCtxt, sf_serialmac_error e) = 0;
+        virtual void ReadBufferCb(struct sf_serialmac_ctx *serialMacCtxt, uint8_t *buffer, size_t bufferSize) = 0;
+        virtual void ReadSyncByteCb(struct sf_serialmac_ctx *serialMacCtxt, uint8_t *buffer, size_t bufferSize) = 0;
+        virtual void WriteBufferCb(struct sf_serialmac_ctx *serialMacCtxt, uint8_t *buffer, size_t bufferSize) = 0;
+        virtual void WriteFrameCb(struct sf_serialmac_ctx *serialMacCtxt, uint8_t *buffer, size_t bufferSize) = 0;
+        virtual void ReadFrameCb(struct sf_serialmac_ctx *serialMacCtxt, uint8_t *buffer, size_t bufferSize) = 0;
 };
 
 /**
  * Mac callbacks mock class.
  */
 class MockMacCallbacks : public MacCallbacks {
+
     public:
         MOCK_METHOD3(HalReadCb, size_t(void *portHandle, uint8_t *buffer, size_t bufferSize));
         MOCK_METHOD1(HalReadWaitingCb,  size_t(void *portHandle));

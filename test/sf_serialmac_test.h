@@ -33,9 +33,10 @@ MATCHER_P2(BufferIsEq, matchBuff, matchBuffLen, "") {
     return BufferMatcher(arg, matchBuff, matchBuffLen);
 }
 
+/**
  * The base test class is an interface class, therefore it may not be used directly
  * as a test fixture.
- * Child classes inheriting from this one have to implement the SetupHalBuffer() method.
+ * Child classes inheriting from this one have to implement the pure virtual methods.
  */
 class SerialMacTest : public ::testing::Test {
 
@@ -50,10 +51,15 @@ class SerialMacTest : public ::testing::Test {
 
     protected:
         MockMacCallbacks macCallbacksMock;
-
-        // You can do set-up work for each test here.
         uint8_t *headerBuffer;
         uint8_t *crcBuffer;
+
+        /** Base MAC test calss constructor.
+         *
+         * Allocates a serial MAC context and frame crc buffer, enables the inverted
+         * frame header length field.
+         * Sets a reference to the mocked mac callbacks class MockMacCallbacks.
+         */
         SerialMacTest();
 
         // You can do clean-up work that doesn't throw exceptions here.
@@ -70,6 +76,10 @@ class SerialMacTest : public ::testing::Test {
         // before the destructor).
         virtual void TearDown();
 
+        /**
+         * Set up the headerBuffer. Child classes have to implement this method with the
+         * according inverted length field.
+         */
         virtual void SetupFrameHeader(uint16_t payloadLength) = 0;
 
         // The serial MAC context.
@@ -81,7 +91,9 @@ class SerialMacTest : public ::testing::Test {
         // Dummy HAL port handle.
         int dummyPortHandle;
 
-        // Initialize the serial mac.
+        /**
+         * Initialize the serial mac callback functions.
+         */
         void InitSerialMac();
 
         /**
