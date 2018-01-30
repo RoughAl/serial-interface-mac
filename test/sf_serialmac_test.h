@@ -25,6 +25,14 @@
 #define MAX_TEST_PAYLOAD_LEN 1000
 
 /**
+ * Custom Matchers
+ */
+bool BufferMatcher(uint8_t *buff, uint8_t *matchBuff, size_t matchBuffLen);
+
+MATCHER_P2(BufferIsEq, matchBuff, matchBuffLen, "") {
+    return BufferMatcher(arg, matchBuff, matchBuffLen);
+}
+
  * The base test class is an interface class, therefore it may not be used directly
  * as a test fixture.
  * Child classes inheriting from this one have to implement the SetupHalBuffer() method.

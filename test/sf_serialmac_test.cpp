@@ -28,16 +28,24 @@ std::vector<uint8_t> SerialMacTest::rxPayload;
 enum sf_serialmac_error SerialMacTest::macError;
 
 
+/*======================================================================================
+ * Custom Matchers
+ *======================================================================================*/
+bool BufferMatcher(uint8_t *buff, uint8_t *matchBuff, size_t matchBuffLen) {
 
+    if(!buff) {
+        return false;
     }
 
     int i;
+    for(i=0; i<matchBuffLen; i++) {
+        if(buff[i] != matchBuff[i]) {
+            break;
+        }
     }
 
-    return bufferSize;
-};
-
-
+    return i == matchBuffLen;
+}
 
 
 SerialMacTest::SerialMacTest() {
