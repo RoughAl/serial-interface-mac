@@ -12,9 +12,9 @@
  * @brief      Serial MAC init test suite.
  */
 
+#include "mocked_mac_callbacks.h"
 #include "sf_serialmac_inverted_length_test.h"
 #include "sf_serialmac.h"
-#include "sf_crc.h"
 
 /**
  * @brief Test correct serial mac initialization with enabled inverted lenght field.
