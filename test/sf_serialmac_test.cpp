@@ -7,7 +7,6 @@
  * embedded.connectivity.solutions.==============
  * @endcode
  *
- * @file
  * @copyright  STACKFORCE GmbH, Heitersheim, Germany, http://www.stackforce.de
  * @author     Adrian Antonana <adrian.antonana@stackforce.de>
  * @brief      Serial MAC unit tests base class
