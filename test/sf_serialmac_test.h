@@ -51,6 +51,7 @@ class SerialMacTest : public ::testing::Test {
     protected:
 
         // You can do set-up work for each test here.
+        uint8_t *crcBuffer;
         SerialMacTest();
 
         // You can do clean-up work that doesn't throw exceptions here.
@@ -83,6 +84,7 @@ class SerialMacTest : public ::testing::Test {
          * Setup a HAL buffer for the given payload. This method has to be implemented by child
          * tests classes depending on the inverted length field having to be activated or not.
          */
+        void SetupFrameCrc(uint8_t *payload, uint16_t payloadLength);
         virtual void SetupHalBuffer(const std::vector<uint8_t> payload) = 0;
 };
 

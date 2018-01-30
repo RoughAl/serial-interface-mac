@@ -117,3 +117,11 @@ void SerialMacTest::InitSerialMac() {
                         (SF_SERIALMAC_EVENT_ERROR) SerialMacTest::MacErrorCb,
                         invertedLengthField);
 }
+
+void SerialMacTest::SetupFrameCrc(uint8_t *payload, uint16_t payloadLength) {
+    uint16_t crc;
+    crc = crc_calc_finalize(payload, payloadLength);
+
+    crcBuffer[0] = (uint8_t)(crc >> 8);
+    crcBuffer[1] = (uint8_t)crc;
+}
