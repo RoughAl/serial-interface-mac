@@ -12,6 +12,9 @@
  * @brief      Serial MAC unit tests base class
  */
 
+#ifndef _SF_SERIALMAC_TEST_H_
+#define _SF_SERIALMAC_TEST_H_
+
 #include <iostream>
 #include <fstream>
 
@@ -81,3 +84,4 @@ class SerialMacTest : public ::testing::Test {
         virtual void SetupHalBuffer(const std::vector<uint8_t> payload) = 0;
 };
 
+#endif

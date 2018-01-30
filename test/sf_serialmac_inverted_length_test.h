@@ -12,6 +12,9 @@
  * @brief      Serial MAC unit tests class with enabled inverted length field
  */
 
+#ifndef _SF_SERIALMAC_INV_LENGTH_TEST_H_
+#define _SF_SERIALMAC_INV_LENGTH_TEST_H_
+
 #include "sf_serialmac_test.h"
 
 /**
@@ -46,3 +49,5 @@ class SerialMacInvertedLengthTest : public SerialMacTest {
          */
         void SetupFrameHeader(uint16_t payloadLength) override;
 };
+
+#endif
