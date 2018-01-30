@@ -27,69 +27,18 @@ uint8_t *SerialMacTest::payloadBuffer;
 std::vector<uint8_t> SerialMacTest::rxPayload;
 enum sf_serialmac_error SerialMacTest::macError;
 
-void SerialMacTest::ReadFrameCb(struct sf_serialmac_ctx *serialMacCtxt, uint8_t *buffer, size_t bufferSize) {
 
-    SerialMacTest::rxPayload.clear();
-    SerialMacTest::rxPayload.assign(buffer, buffer + bufferSize);
 
-    std::free(SerialMacTest::payloadBuffer);
-};
-
-void SerialMacTest::ReadBufferCb(struct sf_serialmac_ctx *serialMacCtxt, uint8_t *buffer, size_t bufferSize) {
-
-    SerialMacTest::payloadBuffer = (uint8_t*)std::malloc(bufferSize);
-
-    if(sf_serialmac_rx_frame(serialMacCtxt, SerialMacTest::payloadBuffer, bufferSize) != SF_SERIALMAC_RETURN_SUCCESS) {
-        std::cout << "sf_serialmac_rx_frame returned error" << std::endl;
     }
-};
-
-void SerialMacTest::WriteFrameCb(struct sf_serialmac_ctx *serialMacCtxt, uint8_t *buffer, size_t bufferSize) {
-
-};
-
-void SerialMacTest::WriteBufferCb(struct sf_serialmac_ctx *serialMacCtxt, uint8_t *buffer, size_t bufferSize) {
-
-};
-
-void SerialMacTest::ReadSyncByteCb(struct sf_serialmac_ctx *serialMacCtxt, uint8_t *buffer, size_t bufferSize) {
-
-};
-
-size_t SerialMacTest::HalReadWaitingCb(void *portHandle) {
-
-    size_t halBufferRemainingBytes = 0;
-    std::vector<uint8_t>::iterator it;
-
-    for(it=SerialMacTest::itHalBuffer; it!=SerialMacTest::halBuffer.end(); it++) {
-        halBufferRemainingBytes++;
-    }
-
-    return halBufferRemainingBytes;
-};
-
-size_t SerialMacTest::HalReadCb(void *portHandle, uint8_t *buffer, size_t bufferSize) {
 
     int i;
-
-    for(i=0; i<bufferSize; i++) {
-        buffer[i] = *SerialMacTest::itHalBuffer;
-        SerialMacTest::itHalBuffer++;
     }
 
     return bufferSize;
 };
 
-size_t SerialMacTest::HalWriteCb(void *portHandle, uint8_t *buffer, size_t bufferSize) {
-    SerialMacTest::fullSentTestBuffer.insert(SerialMacTest::fullSentTestBuffer.end(), buffer, buffer+bufferSize);
 
-    return bufferSize;
-};
 
-void SerialMacTest::MacErrorCb(void*, sf_serialmac_error e) {
-
-    macError = e;
-};
 
 SerialMacTest::SerialMacTest() {
     serialMacCtxt = (sf_serialmac_ctx*)std::malloc(sf_serialmac_ctx_size());

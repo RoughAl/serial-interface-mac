@@ -37,17 +37,6 @@ class SerialMacTest : public ::testing::Test {
         static std::vector<uint8_t> rxPayload;
         static enum sf_serialmac_error macError;
 
-        // Serial MAC callback functions to be registered by the MAC's init function.
-        static void ReadFrameCb(struct sf_serialmac_ctx *serialMacCtxt, uint8_t *buffer, size_t bufferSize);
-        static void ReadBufferCb(struct sf_serialmac_ctx *serialMacCtxt, uint8_t *buffer, size_t bufferSize);
-        static void WriteFrameCb(struct sf_serialmac_ctx *serialMacCtxt, uint8_t *buffer, size_t bufferSize);
-        static void WriteBufferCb(struct sf_serialmac_ctx *serialMacCtxt, uint8_t *buffer, size_t bufferSize);
-        static void ReadSyncByteCb(struct sf_serialmac_ctx *serialMacCtxt, uint8_t *buffer, size_t bufferSize);
-        static size_t HalReadWaitingCb(void *portHandle);
-        static size_t HalReadCb(void *portHandle, uint8_t *buffer, size_t bufferSize);
-        static size_t HalWriteCb(void *portHandle, uint8_t *buffer, size_t bufferSize);
-        static void MacErrorCb(void*, sf_serialmac_error e);
-
     protected:
         MockMacCallbacks macCallbacksMock;
 
