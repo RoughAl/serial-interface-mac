@@ -25,7 +25,7 @@ TEST_F(SerialMacInvertedLengthTest, CorrectInitInvertedLength) {
     sf_serialmac_return macRet;
 
     macRet = sf_serialmac_init (serialMacCtxt,
-                                dummyPortHandle,
+                                &dummyPortHandle,
                                 (SF_SERIALMAC_HAL_READ_FUNCTION) HalReadCb,
                                 (SF_SERIALMAC_HAL_READ_WAIT_FUNCTION) HalReadWaitingCb,
                                 (SF_SERIALMAC_HAL_WRITE_FUNCTION) HalWriteCb,
@@ -49,7 +49,7 @@ TEST_F(SerialMacInvertedLengthTest, CorrectInitNoInvertedLength) {
     sf_serialmac_return macRet;
 
     macRet = sf_serialmac_init (serialMacCtxt,
-                                dummyPortHandle,
+                                &dummyPortHandle,
                                 (SF_SERIALMAC_HAL_READ_FUNCTION) HalReadCb,
                                 (SF_SERIALMAC_HAL_READ_WAIT_FUNCTION) HalReadWaitingCb,
                                 (SF_SERIALMAC_HAL_WRITE_FUNCTION) HalWriteCb,
@@ -97,7 +97,7 @@ TEST_F(SerialMacInvertedLengthTest, WrongHalReadInit) {
     sf_serialmac_return macRet;
 
     macRet = sf_serialmac_init (serialMacCtxt,
-                                    dummyPortHandle,
+                                    &dummyPortHandle,
                                     NULL,
                                     (SF_SERIALMAC_HAL_READ_WAIT_FUNCTION) HalReadWaitingCb,
                                     (SF_SERIALMAC_HAL_WRITE_FUNCTION) HalWriteCb,
@@ -121,7 +121,7 @@ TEST_F(SerialMacInvertedLengthTest, WrongHalReadWaitingInit) {
     sf_serialmac_return macRet;
 
     macRet = sf_serialmac_init (serialMacCtxt,
-                                    dummyPortHandle,
+                                    &dummyPortHandle,
                                     (SF_SERIALMAC_HAL_READ_FUNCTION) HalReadCb,
                                     NULL,
                                     (SF_SERIALMAC_HAL_WRITE_FUNCTION) HalWriteCb,
@@ -145,7 +145,7 @@ TEST_F(SerialMacInvertedLengthTest, WrongHalWriteInit) {
     sf_serialmac_return macRet;
 
     macRet = sf_serialmac_init (serialMacCtxt,
-                                    dummyPortHandle,
+                                    &dummyPortHandle,
                                     (SF_SERIALMAC_HAL_READ_FUNCTION) HalReadCb,
                                     (SF_SERIALMAC_HAL_READ_WAIT_FUNCTION) HalReadWaitingCb,
                                     NULL,
@@ -169,7 +169,7 @@ TEST_F(SerialMacInvertedLengthTest, WrongReadFrameInit) {
     sf_serialmac_return macRet;
 
     macRet = sf_serialmac_init (serialMacCtxt,
-                                    dummyPortHandle,
+                                    &dummyPortHandle,
                                     (SF_SERIALMAC_HAL_READ_FUNCTION) HalReadCb,
                                     (SF_SERIALMAC_HAL_READ_WAIT_FUNCTION) HalReadWaitingCb,
                                     (SF_SERIALMAC_HAL_WRITE_FUNCTION) HalWriteCb,
@@ -193,7 +193,7 @@ TEST_F(SerialMacInvertedLengthTest, WrongReadBufferInit) {
     sf_serialmac_return macRet;
 
     macRet = sf_serialmac_init (serialMacCtxt,
-                                    dummyPortHandle,
+                                    &dummyPortHandle,
                                     (SF_SERIALMAC_HAL_READ_FUNCTION) HalReadCb,
                                     (SF_SERIALMAC_HAL_READ_WAIT_FUNCTION) HalReadWaitingCb,
                                     (SF_SERIALMAC_HAL_WRITE_FUNCTION) HalWriteCb,
@@ -217,7 +217,7 @@ TEST_F(SerialMacInvertedLengthTest, WrongReadSyncByteInit) {
     sf_serialmac_return macRet;
 
     macRet = sf_serialmac_init (serialMacCtxt,
-                                dummyPortHandle,
+                                &dummyPortHandle,
                                 (SF_SERIALMAC_HAL_READ_FUNCTION) HalReadCb,
                                 (SF_SERIALMAC_HAL_READ_WAIT_FUNCTION) HalReadWaitingCb,
                                 (SF_SERIALMAC_HAL_WRITE_FUNCTION) HalWriteCb,
@@ -241,7 +241,7 @@ TEST_F(SerialMacInvertedLengthTest, WrongWriteFrameInit) {
     sf_serialmac_return macRet;
 
     macRet = sf_serialmac_init (serialMacCtxt,
-                                dummyPortHandle,
+                                &dummyPortHandle,
                                 (SF_SERIALMAC_HAL_READ_FUNCTION) HalReadCb,
                                 (SF_SERIALMAC_HAL_READ_WAIT_FUNCTION) HalReadWaitingCb,
                                 (SF_SERIALMAC_HAL_WRITE_FUNCTION) HalWriteCb,
@@ -265,7 +265,7 @@ TEST_F(SerialMacInvertedLengthTest, WrongWriteBufferInit) {
     sf_serialmac_return macRet;
 
     macRet = sf_serialmac_init (serialMacCtxt,
-                                dummyPortHandle,
+                                &dummyPortHandle,
                                 (SF_SERIALMAC_HAL_READ_FUNCTION) HalReadCb,
                                 (SF_SERIALMAC_HAL_READ_WAIT_FUNCTION) HalReadWaitingCb,
                                 (SF_SERIALMAC_HAL_WRITE_FUNCTION) HalWriteCb,
@@ -289,7 +289,7 @@ TEST_F(SerialMacInvertedLengthTest, WrongErrorInit) {
     sf_serialmac_return macRet;
 
     macRet = sf_serialmac_init (serialMacCtxt,
-                                dummyPortHandle,
+                                &dummyPortHandle,
                                 (SF_SERIALMAC_HAL_READ_FUNCTION) HalReadCb,
                                 (SF_SERIALMAC_HAL_READ_WAIT_FUNCTION) HalReadWaitingCb,
                                 (SF_SERIALMAC_HAL_WRITE_FUNCTION) HalWriteCb,

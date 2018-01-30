@@ -74,7 +74,7 @@ class SerialMacTest : public ::testing::Test {
         bool invertedLengthField;
 
         // Dummy HAL port handle.
-        void *dummyPortHandle;
+        int dummyPortHandle;
 
         // Initialize the serial mac.
         void InitSerialMac();
