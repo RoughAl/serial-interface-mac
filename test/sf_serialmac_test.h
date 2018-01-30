@@ -16,6 +16,7 @@
 #include <fstream>
 
 #include "gtest/gtest.h"
+#include "mocked_mac_callbacks.h"
 #include "sf_serialmac.h"
 
 #define MAX_TEST_PAYLOAD_LEN 1000
@@ -48,6 +49,7 @@ class SerialMacTest : public ::testing::Test {
         static void MacErrorCb(void*, sf_serialmac_error e);
 
     protected:
+        MockMacCallbacks macCallbacksMock;
 
         // You can do set-up work for each test here.
         uint8_t *headerBuffer;

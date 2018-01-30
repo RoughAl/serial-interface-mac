@@ -15,6 +15,7 @@
 #include <iomanip>
 
 #include "sf_serialmac_test.h"
+#include "mocked_mac_callbacks.h"
 #include "sf_serialmac.h"
 #include "sf_crc.h"
 
@@ -93,12 +94,14 @@ void SerialMacTest::MacErrorCb(void*, sf_serialmac_error e) {
 SerialMacTest::SerialMacTest() {
     serialMacCtxt = (sf_serialmac_ctx*)std::malloc(sf_serialmac_ctx_size());
     invertedLengthField = true;
+    setMockMac_callbacksPointer(&macCallbacksMock);
     crcBuffer = (uint8_t*)std::malloc(SF_SERIALMAC_PROTOCOL_CRC_FIELD_LEN);
 }
 
 SerialMacTest::~SerialMacTest() {
     std::free(serialMacCtxt);
     std::free(crcBuffer);
+    setMockMac_callbacksPointer(nullptr);
 }
 
 void SerialMacTest::SetUp() {}
