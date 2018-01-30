@@ -51,6 +51,7 @@ class SerialMacTest : public ::testing::Test {
     protected:
 
         // You can do set-up work for each test here.
+        uint8_t *headerBuffer;
         uint8_t *crcBuffer;
         SerialMacTest();
 
@@ -67,6 +68,8 @@ class SerialMacTest : public ::testing::Test {
         // Code here will be called immediately after each test (right
         // before the destructor).
         virtual void TearDown();
+
+        virtual void SetupFrameHeader(uint16_t payloadLength) = 0;
 
         // The serial MAC context.
         struct sf_serialmac_ctx *serialMacCtxt;

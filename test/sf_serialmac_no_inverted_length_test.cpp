@@ -42,3 +42,9 @@ void SerialMacNoInvertedLengthTest::SetupHalBuffer(const std::vector<uint8_t> pa
     halBuffer.push_back((uint8_t)crc);
     itHalBuffer = halBuffer.begin();
 }
+
+void SerialMacNoInvertedLengthTest::SetupFrameHeader(uint16_t payloadLength) {
+    headerBuffer[0] = SF_SERIALMAC_PROTOCOL_SYNC_WORD;
+    headerBuffer[1] = (uint8_t)(payloadLength >> 8);
+    headerBuffer[2] = (uint8_t)payloadLength;
+}

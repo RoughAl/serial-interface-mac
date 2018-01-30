@@ -37,4 +37,10 @@ class SerialMacNoInvertedLengthTest : public SerialMacTest {
         virtual ~SerialMacNoInvertedLengthTest();
 
         void SetupHalBuffer(const std::vector<uint8_t> payload) override;
+
+        /**
+         * Sets up the parent class headerBuffer with disabled inverted
+         * length field for the given payload length.
+         */
+        void SetupFrameHeader(uint16_t payloadLength) override;
 };
