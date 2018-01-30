@@ -104,17 +104,17 @@ void SerialMacTest::SetUp() {}
 void SerialMacTest::TearDown() {}
 
 void SerialMacTest::InitSerialMac() {
-    sf_serialmac_init (serialMacCtxt,
-                        dummyPortHandle,
-                        (SF_SERIALMAC_HAL_READ_FUNCTION) SerialMacTest::HalReadCb,
-                        (SF_SERIALMAC_HAL_READ_WAIT_FUNCTION) SerialMacTest::HalReadWaitingCb,
-                        (SF_SERIALMAC_HAL_WRITE_FUNCTION) SerialMacTest::HalWriteCb,
-                        (SF_SERIALMAC_EVENT) SerialMacTest::ReadFrameCb,
-                        (SF_SERIALMAC_EVENT) SerialMacTest::ReadBufferCb,
-                        (SF_SERIALMAC_EVENT) SerialMacTest::ReadSyncByteCb,
-                        (SF_SERIALMAC_EVENT) SerialMacTest::WriteFrameCb,
-                        (SF_SERIALMAC_EVENT) SerialMacTest::WriteBufferCb,
-                        (SF_SERIALMAC_EVENT_ERROR) SerialMacTest::MacErrorCb,
+    sf_serialmac_init(serialMacCtxt,
+                        (int*)&dummyPortHandle,
+                        (SF_SERIALMAC_HAL_READ_FUNCTION) HalReadCb,
+                        (SF_SERIALMAC_HAL_READ_WAIT_FUNCTION) HalReadWaitingCb,
+                        (SF_SERIALMAC_HAL_WRITE_FUNCTION) HalWriteCb,
+                        (SF_SERIALMAC_EVENT) ReadFrameCb,
+                        (SF_SERIALMAC_EVENT) ReadBufferCb,
+                        (SF_SERIALMAC_EVENT) ReadSyncByteCb,
+                        (SF_SERIALMAC_EVENT) WriteFrameCb,
+                        (SF_SERIALMAC_EVENT) WriteBufferCb,
+                        (SF_SERIALMAC_EVENT_ERROR) MacErrorCb,
                         invertedLengthField);
 }
 
