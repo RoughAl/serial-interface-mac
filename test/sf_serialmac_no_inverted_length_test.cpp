@@ -18,9 +18,12 @@
 
 SerialMacNoInvertedLengthTest::SerialMacNoInvertedLengthTest() {
     invertedLengthField = false;
+    headerBuffer = (uint8_t*)std::malloc(SF_SERIALMAC_PROTOCOL_HEADER_LEN);
 }
 
-SerialMacNoInvertedLengthTest::~SerialMacNoInvertedLengthTest() {}
+SerialMacNoInvertedLengthTest::~SerialMacNoInvertedLengthTest() {
+    std::free(headerBuffer);
+}
 
 void SerialMacNoInvertedLengthTest::SetupHalBuffer(const std::vector<uint8_t> payload) {
     uint16_t payloadSize = payload.size();
