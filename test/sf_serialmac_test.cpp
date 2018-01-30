@@ -94,10 +94,12 @@ void SerialMacTest::MacErrorCb(void*, sf_serialmac_error e) {
 SerialMacTest::SerialMacTest() {
     serialMacCtxt = (sf_serialmac_ctx*)std::malloc(sf_serialmac_ctx_size());
     invertedLengthField = true;
+    crcBuffer = (uint8_t*)std::malloc(SF_SERIALMAC_PROTOCOL_CRC_FIELD_LEN);
 }
 
 SerialMacTest::~SerialMacTest() {
     std::free(serialMacCtxt);
+    std::free(crcBuffer);
 }
 
 void SerialMacTest::SetUp() {}
