@@ -47,17 +47,28 @@ TEST_F(SerialMacNoInvertedLengthTest, SendMaxSizeFrame) {
 
     sf_serialmac_return macRet;
     uint8_t txBuffer[UINT16_MAX];
-    std::vector<uint8_t> txExpectedPayload;
-    uint16_t i;
 
-    for(i=0; i<UINT16_MAX; i++) {
+    for(uint16_t i=0; i<UINT16_MAX; i++) {
         txBuffer[i] = (uint8_t)i;
     }
 
-    txExpectedPayload.assign(txBuffer, txBuffer + UINT16_MAX);
-    fullSentTestBuffer.clear();
-    SetupHalBuffer(txExpectedPayload);
+    SetupFrameHeader(UINT16_MAX);
+    SetupFrameCrc(txBuffer, UINT16_MAX);
     InitSerialMac();
+
+    {
+        InSequence seq;
+        EXPECT_CALL(macCallbacksMock, HalWriteCb(_, BufferIsEq(headerBuffer, SF_SERIALMAC_PROTOCOL_HEADER_LEN), SF_SERIALMAC_PROTOCOL_HEADER_LEN))
+            .WillOnce(Return(SF_SERIALMAC_PROTOCOL_HEADER_LEN));
+        EXPECT_CALL(macCallbacksMock, HalWriteCb(_, BufferIsEq(txBuffer, UINT16_MAX), UINT16_MAX))
+            .WillOnce(Return(UINT16_MAX));
+        EXPECT_CALL(macCallbacksMock, WriteBufferCb(_, BufferIsEq(txBuffer, UINT16_MAX), UINT16_MAX))
+            .Times(1);
+        EXPECT_CALL(macCallbacksMock, HalWriteCb(_, BufferIsEq(crcBuffer, SF_SERIALMAC_PROTOCOL_CRC_FIELD_LEN), SF_SERIALMAC_PROTOCOL_CRC_FIELD_LEN))
+            .WillOnce(Return(SF_SERIALMAC_PROTOCOL_CRC_FIELD_LEN));
+        EXPECT_CALL(macCallbacksMock, WriteFrameCb(_, _, UINT16_MAX))
+            .Times(1);
+    }
 
     macRet = sf_serialmac_tx_frame(serialMacCtxt, UINT16_MAX, txBuffer, UINT16_MAX);
     EXPECT_EQ(macRet, SF_SERIALMAC_RETURN_SUCCESS)
@@ -66,9 +77,6 @@ TEST_F(SerialMacNoInvertedLengthTest, SendMaxSizeFrame) {
     macRet = sf_serialmac_hal_tx_callback(serialMacCtxt);
     EXPECT_EQ(macRet, SF_SERIALMAC_RETURN_SUCCESS)
     << "Frame tx callback failed";
-
-    EXPECT_EQ(fullSentTestBuffer, halBuffer)
-    << "Unexpected frame sent";
 }
 
 /**
@@ -77,20 +85,32 @@ TEST_F(SerialMacNoInvertedLengthTest, SendMaxSizeFrame) {
  *        and determines that for each generated payload the mac produces the correct
  *        frame header, payload and CRC.
  */
-TEST_F(SerialMacNoInvertedLengthTest, SendFrame) {
+TEST_F(SerialMacNoInvertedLengthTest, SendFrames) {
 
     sf_serialmac_return macRet;
     uint8_t txBuffer[MAX_TEST_PAYLOAD_LEN];
-    std::vector<uint8_t> txExpectedPayload;
-    uint16_t i;
 
     InitSerialMac();
 
-    for(i=0; i<MAX_TEST_PAYLOAD_LEN; i++) {
+    for(uint16_t i=0; i<MAX_TEST_PAYLOAD_LEN; i++) {
         txBuffer[i] = (uint8_t)i;
-        txExpectedPayload.push_back((uint8_t)i);
-        SetupHalBuffer(txExpectedPayload);
-        fullSentTestBuffer.clear();
+
+        SetupFrameHeader(i+1);
+        SetupFrameCrc(txBuffer, i+1);
+
+        {
+            InSequence seq;
+            EXPECT_CALL(macCallbacksMock, HalWriteCb(_, BufferIsEq(headerBuffer, SF_SERIALMAC_PROTOCOL_HEADER_LEN), SF_SERIALMAC_PROTOCOL_HEADER_LEN))
+                .WillOnce(Return(SF_SERIALMAC_PROTOCOL_HEADER_LEN));
+            EXPECT_CALL(macCallbacksMock, HalWriteCb(_, BufferIsEq(txBuffer, i+1), i+1))
+                .WillOnce(Return(i+1));
+            EXPECT_CALL(macCallbacksMock, WriteBufferCb(_, BufferIsEq(txBuffer, i+1), i+1))
+                .Times(1);
+            EXPECT_CALL(macCallbacksMock, HalWriteCb(_, BufferIsEq(crcBuffer, SF_SERIALMAC_PROTOCOL_CRC_FIELD_LEN), SF_SERIALMAC_PROTOCOL_CRC_FIELD_LEN))
+                .WillOnce(Return(SF_SERIALMAC_PROTOCOL_CRC_FIELD_LEN));
+            EXPECT_CALL(macCallbacksMock, WriteFrameCb(_,_,i+1))
+                .Times(1);
+        }
 
         macRet = sf_serialmac_tx_frame(serialMacCtxt, i+1, txBuffer, i+1);
         EXPECT_EQ(macRet, SF_SERIALMAC_RETURN_SUCCESS)
@@ -99,8 +119,5 @@ TEST_F(SerialMacNoInvertedLengthTest, SendFrame) {
         macRet = sf_serialmac_hal_tx_callback(serialMacCtxt);
         EXPECT_EQ(macRet, SF_SERIALMAC_RETURN_SUCCESS)
         << "Frame tx callback failed";
-
-        EXPECT_EQ(fullSentTestBuffer, halBuffer)
-        << "Unexpected frame sent";
     }
 }
