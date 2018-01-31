@@ -116,11 +116,8 @@ class SerialMacTest : public ::testing::Test {
         void InitSerialMac();
 
         /**
-         * Setup a HAL buffer for the given payload. This method has to be implemented by child
-         * tests classes depending on the inverted length field having to be activated or not.
          */
         void SetupFrameCrc(uint8_t *payload, uint16_t payloadLength);
-        virtual void SetupHalBuffer(const std::vector<uint8_t> payload) = 0;
 };
 
 #endif
