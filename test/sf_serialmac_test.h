@@ -34,6 +34,25 @@ MATCHER_P2(BufferIsEq, matchBuff, matchBuffLen, "") {
 }
 
 /**
+ * Custom Actions
+ */
+ACTION_P(AssignBuffer, srcBuffer) {
+    for(int i=0; i<arg2; i++) {
+        arg1[i] = srcBuffer[i];
+    }
+}
+
+ACTION_P(AllocateAndReceiveBuffer, payloadBuffer) {
+    *payloadBuffer = (uint8_t*)std::malloc(sizeof(uint8_t)*arg2);
+    sf_serialmac_rx_frame(arg0, *payloadBuffer, arg2);
+}
+
+ACTION_P(FreeBuffer, buffer) {
+    if(*buffer) {
+        std::free(*buffer);
+    }
+}
+
  * The base test class is an interface class, therefore it may not be used directly
  * as a test fixture.
  * Child classes inheriting from this one have to implement the pure virtual methods.
