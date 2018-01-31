@@ -60,6 +60,8 @@ ACTION_P(FreeBuffer, buffer) {
 class SerialMacTest : public ::testing::Test {
 
     public:
+        static const uint macSyncWordFieldLength;
+        static const uint macCrcFieldLength;
         static std::vector<uint8_t> fullSentTestBuffer;
         static size_t halRxBytesWaiting;
         static std::vector<uint8_t> halBuffer;

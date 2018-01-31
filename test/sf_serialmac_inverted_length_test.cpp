@@ -15,9 +15,12 @@
 #include "sf_serialmac_inverted_length_test.h"
 #include "sf_crc.h"
 
+const uint SerialMacInvertedLengthTest::macHeaderFieldLength = SF_SERIALMAC_PROTOCOL_HEADER_LEN_EXTENDED;
+const uint SerialMacInvertedLengthTest::macLengthFieldLength = SF_SERIALMAC_PROTOCOL_HEADER_LEN_EXTENDED - macSyncWordFieldLength;
+
 SerialMacInvertedLengthTest::SerialMacInvertedLengthTest() {
     invertedLengthField = true;
-    headerBuffer = (uint8_t*)std::malloc(SF_SERIALMAC_PROTOCOL_HEADER_LEN_EXTENDED);
+    headerBuffer = (uint8_t*)std::malloc(macHeaderFieldLength);
 }
 
 SerialMacInvertedLengthTest::~SerialMacInvertedLengthTest() {

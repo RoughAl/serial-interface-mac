@@ -47,12 +47,14 @@ bool BufferMatcher(uint8_t *buff, uint8_t *matchBuff, size_t matchBuffLen) {
     return i == matchBuffLen;
 }
 
+const uint SerialMacTest::macSyncWordFieldLength = SF_SERIALMAC_PROTOCOL_SYNC_WORD_LEN;
+const uint SerialMacTest::macCrcFieldLength = SF_SERIALMAC_PROTOCOL_CRC_FIELD_LEN;
 
 SerialMacTest::SerialMacTest() {
     serialMacCtxt = (sf_serialmac_ctx*)std::malloc(sf_serialmac_ctx_size());
     invertedLengthField = true;
     setMockMac_callbacksPointer(&macCallbacksMock);
-    crcBuffer = (uint8_t*)std::malloc(SF_SERIALMAC_PROTOCOL_CRC_FIELD_LEN);
+    crcBuffer = (uint8_t*)std::malloc(macCrcFieldLength);
 }
 
 SerialMacTest::~SerialMacTest() {

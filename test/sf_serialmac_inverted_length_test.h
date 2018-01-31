@@ -35,6 +35,10 @@
 class SerialMacInvertedLengthTest : public SerialMacTest {
 
     public:
+
+        static const uint macHeaderFieldLength;
+        static const uint macLengthFieldLength;
+
         SerialMacInvertedLengthTest();
         virtual ~SerialMacInvertedLengthTest();
 
