@@ -53,8 +53,9 @@ ACTION_P(FreeBuffer, buffer) {
     }
 }
 
+/**
  * The base test class is an interface class, therefore it may not be used directly
- * as a test fixture.
+ * in a test fixture.
  * Child classes inheriting from this one have to implement the pure virtual methods.
  */
 class SerialMacTest : public ::testing::Test {
@@ -112,6 +113,7 @@ class SerialMacTest : public ::testing::Test {
         void InitSerialMac();
 
         /**
+         * Set up a frame's crcBuffer for the given payload.
          */
         void SetupFrameCrc(uint8_t *payload, uint16_t payloadLength);
 };
