@@ -62,6 +62,7 @@ class SerialMacTest : public ::testing::Test {
     public:
         static const uint macSyncWordFieldLength;
         static const uint macCrcFieldLength;
+        uint8_t *payloadBuffer;
 
     protected:
         MockMacCallbacks macCallbacksMock;
