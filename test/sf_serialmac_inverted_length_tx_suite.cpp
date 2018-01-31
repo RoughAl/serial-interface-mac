@@ -12,9 +12,25 @@
  * @brief      Serial MAC Tx test suite.
  */
 
+#include <gmock/gmock.h>
+
+#include "sf_serialmac_test.h"
 #include "sf_serialmac_inverted_length_test.h"
+#include "mocked_mac_callbacks.h"
 #include "sf_serialmac.h"
 #include "sf_crc.h"
+
+using ::testing::AtLeast;
+using ::testing::InSequence;
+using ::testing::Return;
+using ::testing::DefaultValue;
+using ::testing::_;
+using ::testing::DoAll;
+using ::testing::SetArgPointee;
+using ::testing::SetArgReferee;
+using ::testing::SaveArgPointee;
+using ::testing::Matcher;
+using ::testing::ContainerEq;
 
 /**
  * @brief Test attempt to send with a NULL mac context.
@@ -51,23 +67,33 @@ TEST_F(SerialMacInvertedLengthTest, SendFrameWrongBuffer) {
 TEST_F(SerialMacInvertedLengthTest, SendEmptyFrame) {
 
     sf_serialmac_return macRet;
-    uint8_t txBuffer[0];
+    uint8_t txPayloadBuffer[0];
+    uint16_t txPayloadLength = 0;
     std::vector<uint8_t> txPayload;
 
-    fullSentTestBuffer.clear();
-    SetupHalBuffer(txPayload);
+    SetupFrameCrc(txPayloadBuffer, txPayloadLength);
+    SetupFrameHeader(txPayloadLength);
     InitSerialMac();
 
-    macRet = sf_serialmac_tx_frame(serialMacCtxt, 0, txBuffer, 0);
+    {
+        InSequence seq;
+        EXPECT_CALL(macCallbacksMock, HalWriteCb(_, _, macHeaderFieldLength))
+            .WillOnce(Return(macHeaderFieldLength));
+        EXPECT_CALL(macCallbacksMock, WriteBufferCb(_, _, txPayloadLength))
+            .Times(1);
+        EXPECT_CALL(macCallbacksMock, HalWriteCb(_, _, macCrcFieldLength))
+            .WillOnce(Return(macCrcFieldLength));
+        EXPECT_CALL(macCallbacksMock, WriteFrameCb(_, _, txPayloadLength))
+            .Times(1);
+    }
+
+    macRet = sf_serialmac_tx_frame(serialMacCtxt, txPayloadLength, txPayloadBuffer, txPayloadLength);
     EXPECT_EQ(macRet, SF_SERIALMAC_RETURN_SUCCESS)
     << "Frame tx failed";
 
     macRet = sf_serialmac_hal_tx_callback(serialMacCtxt);
     EXPECT_EQ(macRet, SF_SERIALMAC_RETURN_SUCCESS)
     << "Frame tx callback failed";
-
-    EXPECT_EQ(fullSentTestBuffer, halBuffer)
-    << "Unexpected frame sent";
 }
 
 /**
