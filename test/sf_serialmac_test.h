@@ -62,13 +62,6 @@ class SerialMacTest : public ::testing::Test {
     public:
         static const uint macSyncWordFieldLength;
         static const uint macCrcFieldLength;
-        static std::vector<uint8_t> fullSentTestBuffer;
-        static size_t halRxBytesWaiting;
-        static std::vector<uint8_t> halBuffer;
-        static std::vector<uint8_t>::iterator itHalBuffer;
-        static uint8_t *payloadBuffer;
-        static std::vector<uint8_t> rxPayload;
-        static enum sf_serialmac_error macError;
 
     protected:
         MockMacCallbacks macCallbacksMock;

@@ -19,14 +19,6 @@
 #include "sf_serialmac.h"
 #include "sf_crc.h"
 
-std::vector<uint8_t> SerialMacTest::fullSentTestBuffer;
-size_t SerialMacTest::halRxBytesWaiting;
-std::vector<uint8_t> SerialMacTest::halBuffer;
-std::vector<uint8_t>::iterator SerialMacTest::itHalBuffer;
-uint8_t *SerialMacTest::payloadBuffer;
-std::vector<uint8_t> SerialMacTest::rxPayload;
-enum sf_serialmac_error SerialMacTest::macError;
-
 
 /*======================================================================================
  * Custom Matchers
