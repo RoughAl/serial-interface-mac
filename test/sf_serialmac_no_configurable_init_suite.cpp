@@ -38,6 +38,9 @@ TEST_F(SerialMacInvertedLengthTest, CorrectInit) {
 
     EXPECT_EQ(macRet, SF_SERIALMAC_RETURN_SUCCESS)
     << "Failed to initialize serial mac";
+
+    EXPECT_EQ(serialMacCtxt->headerLength, SF_SERIALMAC_PROTOCOL_HEADER_LEN_EXTENDED)
+    << "Unexpected frame header length";
 }
 
 /**
