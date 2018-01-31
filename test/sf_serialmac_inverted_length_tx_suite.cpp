@@ -9,7 +9,7 @@
  *
  * @copyright  STACKFORCE GmbH, Heitersheim, Germany, http://www.stackforce.de
  * @author     Adrian Antonana <adrian.antonana@stackforce.de>
- * @brief      Serial MAC Tx test suite.
+ * @brief      Configurable Serial MAC Tx test suite with enabled inverted length field.
  */
 
 #include <gmock/gmock.h>
