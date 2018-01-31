@@ -16,28 +16,112 @@
 #include "sf_serialmac.h"
 #include "sf_crc.h"
 
+using ::testing::AtLeast;
+using ::testing::InSequence;
+using ::testing::Return;
+using ::testing::DefaultValue;
+using ::testing::_;
+using ::testing::DoAll;
+using ::testing::SetArgPointee;
+using ::testing::SetArgReferee;
+using ::testing::SaveArgPointee;
+using ::testing::Matcher;
+using ::testing::ContainerEq;
+
 /**
  * @brief Test max possible frame payload edge case.
  */
 TEST_F(SerialMacInvertedLengthTest, ReceiveMaxSizeFrame) {
 
     sf_serialmac_return macRet;
-    std::vector<uint8_t> rxExpectedPayload;
-    uint16_t i;
+    uint8_t payloadBuff[UINT16_MAX];
+    uint16_t payloadLength = UINT16_MAX;
 
-    for(i=0; i<UINT16_MAX; i++) {
-        rxExpectedPayload.push_back((uint8_t)i);
+
+    for(uint16_t i=0; i<payloadLength; i++) {
+        payloadBuff[i] = (uint8_t)i;
     }
 
-    SetupHalBuffer(rxExpectedPayload);
+    SetupFrameHeader(payloadLength);
+    SetupFrameCrc(payloadBuff, payloadLength);
+
+    {
+        InSequence seq;
+        EXPECT_CALL(macCallbacksMock, HalReadWaitingCb(_))
+            .WillOnce(
+                Return(payloadLength +
+                        macHeaderFieldLength +
+                        macCrcFieldLength
+                )
+            );
+
+        EXPECT_CALL(macCallbacksMock, HalReadCb(_, _, macSyncWordFieldLength))
+            .WillOnce(
+                DoAll(AssignBuffer(headerBuffer),
+                      Return(macSyncWordFieldLength)
+                )
+            );
+
+        EXPECT_CALL(macCallbacksMock, ReadSyncByteCb(_, _, _))
+            .Times(1);
+
+        EXPECT_CALL(macCallbacksMock, HalReadWaitingCb(_))
+            .WillOnce(
+                Return(payloadLength +
+                        macLengthFieldLength +
+                        macCrcFieldLength
+                )
+            );
+
+        EXPECT_CALL(macCallbacksMock, HalReadCb(_, _, macLengthFieldLength))
+            .WillOnce(
+                DoAll(
+                    AssignBuffer(headerBuffer+macSyncWordFieldLength),
+                    Return(macLengthFieldLength)
+                )
+            );
+        EXPECT_CALL(macCallbacksMock, ReadBufferCb(_, _, payloadLength))
+            .WillOnce(
+                AllocateAndReceiveBuffer(&payloadBuffer)
+            );
+
+        EXPECT_CALL(macCallbacksMock, HalReadWaitingCb(_))
+            .WillOnce(
+                Return(payloadLength + macCrcFieldLength)
+            );
+
+        EXPECT_CALL(macCallbacksMock, HalReadCb(_, _, payloadLength))
+            .WillOnce(
+                DoAll(
+                    AssignBuffer(payloadBuff),
+                    Return(payloadLength)
+                )
+            );
+
+        EXPECT_CALL(macCallbacksMock, HalReadWaitingCb(_))
+            .WillOnce(
+                Return(macCrcFieldLength)
+            );
+
+        EXPECT_CALL(macCallbacksMock, HalReadCb(_, _, macCrcFieldLength))
+            .WillOnce(
+                DoAll(
+                    AssignBuffer(crcBuffer),
+                    Return(macCrcFieldLength)
+                )
+            );
+
+        EXPECT_CALL(macCallbacksMock, ReadFrameCb(_, _, payloadLength))
+            .WillOnce(
+                FreeBuffer(&payloadBuffer)
+            );
+    }
+
     InitSerialMac();
 
     macRet = sf_serialmac_hal_rx_callback(serialMacCtxt);
     EXPECT_EQ(macRet, SF_SERIALMAC_RETURN_SUCCESS)
     << "HAL Rx callback failed";
-
-    EXPECT_EQ(rxExpectedPayload, rxPayload)
-    << "Received unexpected payload";
 }
 
 /**
@@ -47,21 +131,93 @@ TEST_F(SerialMacInvertedLengthTest, ReceiveMaxSizeFrame) {
 TEST_F(SerialMacInvertedLengthTest, ReceiveFrames) {
 
     sf_serialmac_return macRet;
-    std::vector<uint8_t> rxExpectedPayload;
-    int i;
+    uint8_t payloadBuff[MAX_TEST_PAYLOAD_LEN];
+    uint16_t payloadLength;
 
     InitSerialMac();
 
-    for(i=0; i<MAX_TEST_PAYLOAD_LEN; i++) {
-        rxExpectedPayload.push_back((uint8_t)i);
-        SetupHalBuffer(rxExpectedPayload);
+    for(uint16_t i=0; i<MAX_TEST_PAYLOAD_LEN; i++) {
+        payloadBuff[i] = (uint8_t)i;
+        payloadLength = i+1;
+        SetupFrameHeader(payloadLength);
+        SetupFrameCrc(payloadBuff, payloadLength);
+
+        {
+            InSequence seq;
+            EXPECT_CALL(macCallbacksMock, HalReadWaitingCb(_))
+                .WillOnce(
+                    Return(payloadLength +
+                            macHeaderFieldLength +
+                            macCrcFieldLength
+                    )
+                );
+
+            EXPECT_CALL(macCallbacksMock, HalReadCb(_, _, macSyncWordFieldLength))
+                .WillOnce(
+                    DoAll(AssignBuffer(headerBuffer),
+                        Return(macSyncWordFieldLength)
+                    )
+                );
+
+            EXPECT_CALL(macCallbacksMock, ReadSyncByteCb(_, _, _))
+                .Times(1);
+
+            EXPECT_CALL(macCallbacksMock, HalReadWaitingCb(_))
+                .WillOnce(
+                    Return(payloadLength +
+                            macLengthFieldLength +
+                            macCrcFieldLength
+                    )
+                );
+
+            EXPECT_CALL(macCallbacksMock, HalReadCb(_, _, macLengthFieldLength))
+                .WillOnce(
+                    DoAll(
+                        AssignBuffer(headerBuffer + macSyncWordFieldLength),
+                        Return(macLengthFieldLength)
+                    )
+                );
+
+            EXPECT_CALL(macCallbacksMock, ReadBufferCb(_, _, payloadLength))
+                .WillOnce(
+                    AllocateAndReceiveBuffer(&payloadBuffer)
+                );
+
+            EXPECT_CALL(macCallbacksMock, HalReadWaitingCb(_))
+                .WillOnce(
+                    Return(payloadLength + macCrcFieldLength)
+                );
+
+            EXPECT_CALL(macCallbacksMock, HalReadCb(_, _, payloadLength))
+                .WillOnce(
+                    DoAll(
+                        AssignBuffer(payloadBuff),
+                        Return(payloadLength)
+                    )
+                );
+
+            EXPECT_CALL(macCallbacksMock, HalReadWaitingCb(_))
+                .WillOnce(
+                    Return(macCrcFieldLength)
+                );
+
+            EXPECT_CALL(macCallbacksMock, HalReadCb(_, _, macCrcFieldLength))
+                .WillOnce(
+                    DoAll(
+                        AssignBuffer(crcBuffer),
+                        Return(macCrcFieldLength)
+                    )
+                );
+
+            EXPECT_CALL(macCallbacksMock, ReadFrameCb(_, _, payloadLength))
+                .WillOnce(
+                    FreeBuffer(&payloadBuffer)
+                );
+        }
 
         macRet = sf_serialmac_hal_rx_callback(serialMacCtxt);
         EXPECT_EQ(macRet, SF_SERIALMAC_RETURN_SUCCESS)
         << "HAL Rx callback failed";
-
-        EXPECT_EQ(rxExpectedPayload, rxPayload)
-        << "Received unexpected payload";
     }
 }
 
@@ -69,25 +225,63 @@ TEST_F(SerialMacInvertedLengthTest, ReceiveFrames) {
  * @brief Test receiving frames with wrong inverted length field.
  */
 TEST_F(SerialMacInvertedLengthTest, ReceiveFramesWrongInverterLength) {
-
     sf_serialmac_return macRet;
-    std::vector<uint8_t> rxPayload;
-    uint16_t i;
+    uint8_t payloadBuff[MAX_TEST_PAYLOAD_LEN];
+    uint16_t payloadLength;
 
-    for(i=0; i<UINT16_MAX; i++) {
-        rxPayload.push_back((uint8_t)i);
-    }
-
-    SetupHalBuffer(rxPayload);
-    halBuffer[SF_SERIALMAC_PROTOCOL_HEADER_LEN-1]--;
     InitSerialMac();
 
-    macRet = sf_serialmac_hal_rx_callback(serialMacCtxt);
-    EXPECT_EQ(macRet, SF_SERIALMAC_RETURN_SUCCESS)
-    << "HAL Rx callback failed";
+    for(uint16_t i=0; i<MAX_TEST_PAYLOAD_LEN; i++) {
+        payloadBuff[i] = (uint8_t)i;
+        payloadLength = i+1;
+        SetupFrameHeader(payloadLength);
+        SetupFrameCrc(payloadBuff, payloadLength);
+        headerBuffer[macHeaderFieldLength-1]--;
 
-    EXPECT_EQ(macError, SF_SERIALMAC_ERROR_LENGTH_VERIFICATION_FAILED)
-    << "Inverted length field verification should have failed";
+        {
+            InSequence seq;
+            EXPECT_CALL(macCallbacksMock, HalReadWaitingCb(_))
+                .WillOnce(
+                    Return(payloadLength +
+                            macHeaderFieldLength +
+                            macCrcFieldLength
+                    )
+                );
+
+            EXPECT_CALL(macCallbacksMock, HalReadCb(_, _, macSyncWordFieldLength))
+                .WillOnce(
+                    DoAll(AssignBuffer(headerBuffer),
+                        Return(macSyncWordFieldLength)
+                    )
+                );
+
+            EXPECT_CALL(macCallbacksMock, ReadSyncByteCb(_, _, _))
+                .Times(1);
+
+            EXPECT_CALL(macCallbacksMock, HalReadWaitingCb(_))
+                .WillOnce(
+                    Return(payloadLength +
+                            macLengthFieldLength +
+                            macCrcFieldLength
+                    )
+                );
+
+            EXPECT_CALL(macCallbacksMock, HalReadCb(_, _, macLengthFieldLength))
+                .WillOnce(
+                    DoAll(
+                        AssignBuffer(headerBuffer + macSyncWordFieldLength),
+                        Return(macLengthFieldLength)
+                    )
+                );
+
+            EXPECT_CALL(macCallbacksMock, MacErrorCb(_, SF_SERIALMAC_ERROR_LENGTH_VERIFICATION_FAILED))
+                .Times(1);
+        }
+
+        macRet = sf_serialmac_hal_rx_callback(serialMacCtxt);
+        EXPECT_EQ(macRet, SF_SERIALMAC_RETURN_SUCCESS)
+        << "HAL Rx callback failed";
+    }
 }
 
 /**
@@ -96,21 +290,93 @@ TEST_F(SerialMacInvertedLengthTest, ReceiveFramesWrongInverterLength) {
 TEST_F(SerialMacInvertedLengthTest, ReceiveFramesWrongCrc) {
 
     sf_serialmac_return macRet;
-    std::vector<uint8_t> rxPayload;
-    uint16_t i;
+    uint8_t payloadBuff[MAX_TEST_PAYLOAD_LEN];
+    uint16_t payloadLength;
 
-    for(i=0; i<UINT16_MAX; i++) {
-        rxPayload.push_back((uint8_t)i);
-    }
-
-    SetupHalBuffer(rxPayload);
-    halBuffer.at(halBuffer.back())--;
     InitSerialMac();
 
-    macRet = sf_serialmac_hal_rx_callback(serialMacCtxt);
-    EXPECT_EQ(macRet, SF_SERIALMAC_RETURN_SUCCESS)
-    << "HAL Rx callback failed";
+    for(uint16_t i=0; i<MAX_TEST_PAYLOAD_LEN; i++) {
+        payloadBuff[i] = (uint8_t)i;
+        payloadLength = i+1;
+        SetupFrameHeader(payloadLength);
+        SetupFrameCrc(payloadBuff, payloadLength);
+        crcBuffer[0]--;
 
-    EXPECT_EQ(macError, SF_SERIALMAC_ERROR_INVALID_CRC)
-    << "Crc verification should have failed";
+        {
+            InSequence seq;
+            EXPECT_CALL(macCallbacksMock, HalReadWaitingCb(_))
+                .WillOnce(
+                    Return(payloadLength +
+                            macHeaderFieldLength +
+                            macCrcFieldLength
+                    )
+                );
+
+            EXPECT_CALL(macCallbacksMock, HalReadCb(_, _, macSyncWordFieldLength))
+                .WillOnce(
+                    DoAll(AssignBuffer(headerBuffer),
+                        Return(macSyncWordFieldLength)
+                    )
+                );
+
+            EXPECT_CALL(macCallbacksMock, ReadSyncByteCb(_, _, _))
+                .Times(1);
+
+            EXPECT_CALL(macCallbacksMock, HalReadWaitingCb(_))
+                .WillOnce(
+                    Return(payloadLength +
+                            macLengthFieldLength +
+                            macCrcFieldLength
+                    )
+                );
+
+            EXPECT_CALL(macCallbacksMock, HalReadCb(_, _, macLengthFieldLength))
+                .WillOnce(
+                    DoAll(
+                        AssignBuffer(headerBuffer + macSyncWordFieldLength),
+                        Return(macLengthFieldLength)
+                    )
+                );
+
+            EXPECT_CALL(macCallbacksMock, ReadBufferCb(_, _, payloadLength))
+                .WillOnce(
+                    AllocateAndReceiveBuffer(&payloadBuffer)
+                );
+
+            EXPECT_CALL(macCallbacksMock, HalReadWaitingCb(_))
+                .WillOnce(
+                    Return(payloadLength + macCrcFieldLength)
+                );
+
+            EXPECT_CALL(macCallbacksMock, HalReadCb(_, _, payloadLength))
+                .WillOnce(
+                    DoAll(
+                        AssignBuffer(payloadBuff),
+                        Return(payloadLength)
+                    )
+                );
+
+            EXPECT_CALL(macCallbacksMock, HalReadWaitingCb(_))
+                .WillOnce(
+                    Return(macCrcFieldLength)
+                );
+
+            EXPECT_CALL(macCallbacksMock, HalReadCb(_, _, macCrcFieldLength))
+                .WillOnce(
+                    DoAll(
+                        AssignBuffer(crcBuffer),
+                        Return(macCrcFieldLength)
+                    )
+                );
+
+            EXPECT_CALL(macCallbacksMock, MacErrorCb(_, SF_SERIALMAC_ERROR_INVALID_CRC))
+                .WillOnce(
+                    FreeBuffer(&payloadBuffer)
+                );
+        }
+
+        macRet = sf_serialmac_hal_rx_callback(serialMacCtxt);
+        EXPECT_EQ(macRet, SF_SERIALMAC_RETURN_SUCCESS)
+        << "HAL Rx callback failed";
+    }
 }
