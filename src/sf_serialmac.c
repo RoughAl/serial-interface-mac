@@ -13,9 +13,9 @@ extern "C"
  *
  * @file
  * @copyright  STACKFORCE GmbH, Heitersheim, Germany, www.stackforce.de
- * @author     STACKFORCE
  * @author     Lars Möllendorf
- * @brief      STACKFORCE serial command line client (sf)
+ * @author     Adrian Antonana
+ * @brief      STACKFORCE Serial MAC Module
  *
  * @details Please consult the "README" for a general overview
  * of the STACKFORCE Serial MAC.

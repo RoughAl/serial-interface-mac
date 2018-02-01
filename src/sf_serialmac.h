@@ -13,8 +13,8 @@ extern "C"
  *
  * @file
  * @copyright  STACKFORCE GmbH, Heitersheim, Germany, www.stackforce.de
- * @author     STACKFORCE
  * @author     Lars Möllendorf
+ * @author     Adrian Antonana
  * @brief      STACKFORCE Serial MAC Module
  *
  * @details Please consult the "README" for a general overview
