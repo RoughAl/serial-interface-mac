@@ -7,7 +7,6 @@
  * embedded.connectivity.solutions.==============
  * @endcode
  *
- * @file
  * @copyright  STACKFORCE GmbH, Heitersheim, Germany, http://www.stackforce.de
  * @author     Adrian Antonana <adrian.antonana@stackforce.de>
  * @brief      Serial MAC unit tests class with enabled inverted length field
@@ -16,33 +15,22 @@
 #include "sf_serialmac_inverted_length_test.h"
 #include "sf_crc.h"
 
+const uint SerialMacInvertedLengthTest::macHeaderFieldLength = SF_SERIALMAC_PROTOCOL_HEADER_LEN_EXTENDED;
+const uint SerialMacInvertedLengthTest::macLengthFieldLength = SF_SERIALMAC_PROTOCOL_HEADER_LEN_EXTENDED - macSyncWordFieldLength;
+
 SerialMacInvertedLengthTest::SerialMacInvertedLengthTest() {
     invertedLengthField = true;
+    headerBuffer = (uint8_t*)std::malloc(macHeaderFieldLength);
 }
 
-SerialMacInvertedLengthTest::~SerialMacInvertedLengthTest() {}
+SerialMacInvertedLengthTest::~SerialMacInvertedLengthTest() {
+    std::free(headerBuffer);
+}
 
-void SerialMacInvertedLengthTest::SetupHalBuffer(const std::vector<uint8_t> payload) {
-
-    uint16_t payloadSize = payload.size();
-    uint16_t invPayloadSize = ~payloadSize;
-    uint8_t payloadBuff[payloadSize];
-    uint16_t crc;
-
-    int i;
-    for(i=0; i<payloadSize; i++) {
-        payloadBuff[i] = payload[i];
-    }
-
-    crc = crc_calc_finalize(payloadBuff, payloadSize);
-    halBuffer.clear();
-    halBuffer.push_back(SF_SERIALMAC_PROTOCOL_SYNC_WORD);
-    halBuffer.push_back((uint8_t)(payloadSize >> 8));
-    halBuffer.push_back((uint8_t)payloadSize);
-    halBuffer.push_back((uint8_t)(invPayloadSize >> 8));
-    halBuffer.push_back((uint8_t)invPayloadSize);
-    halBuffer.insert(halBuffer.end(), payload.begin(), payload.end());
-    halBuffer.push_back((uint8_t)(crc >> 8));
-    halBuffer.push_back((uint8_t)crc);
-    itHalBuffer = halBuffer.begin();
+void SerialMacInvertedLengthTest::SetupFrameHeader(uint16_t payloadLength) {
+    headerBuffer[0] = SF_SERIALMAC_PROTOCOL_SYNC_WORD;
+    headerBuffer[1] = (uint8_t)(payloadLength >> 8);
+    headerBuffer[2] = (uint8_t)payloadLength;
+    headerBuffer[3] = (uint8_t)(~payloadLength >> 8);
+    headerBuffer[4] = (uint8_t)~payloadLength;
 }

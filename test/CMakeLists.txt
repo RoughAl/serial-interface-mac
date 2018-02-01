@@ -29,7 +29,7 @@
 ## along with libsfserialmac.  If not, see <http://www.gnu.org/licenses/>.
 ##
 
-set (CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 11)
 
 #---------------------------------------------------------------------------------------
 # Common sources
@@ -37,6 +37,7 @@ set (CMAKE_CXX_STANDARD 11)
 set(TEST_SUITE_COMMON_SOURECES
     ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/sf_serialmac_test.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/mocked_mac_callbacks.cpp
 )
 
 #=======================================================================================

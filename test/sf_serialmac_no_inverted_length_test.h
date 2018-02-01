@@ -7,11 +7,13 @@
  * embedded.connectivity.solutions.==============
  * @endcode
  *
- * @file
  * @copyright  STACKFORCE GmbH, Heitersheim, Germany, http://www.stackforce.de
  * @author     Adrian Antonana <adrian.antonana@stackforce.de>
  * @brief      Serial MAC unit tests class with disabled inverted length field
  */
+
+#ifndef _SF_SERIALMAC_NO_INV_LENGTH_TEST_H_
+#define _SF_SERIALMAC_NO_INV_LENGTH_TEST_H_
 
 #include "sf_serialmac_test.h"
 
@@ -33,8 +35,17 @@
 class SerialMacNoInvertedLengthTest : public SerialMacTest {
 
     public:
+        static const uint macHeaderFieldLength;
+        static const uint macLengthFieldLength;
+
         SerialMacNoInvertedLengthTest();
         virtual ~SerialMacNoInvertedLengthTest();
 
-        void SetupHalBuffer(const std::vector<uint8_t> payload) override;
+        /**
+         * Sets up the parent class headerBuffer with disabled inverted
+         * length field for the given payload length.
+         */
+        void SetupFrameHeader(uint16_t payloadLength) override;
 };
+
+#endif
