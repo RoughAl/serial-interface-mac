@@ -68,7 +68,7 @@ The Frame format is:
     +----+-------+-------+----+-------+
 
 
-## Features
+# Features
 
 The STACKFORCE Serial MAC is written with cross-platform portability in mind.
 It should be usable within operating systems as well as bare metal devices.
@@ -81,8 +81,9 @@ functions to read from and write to the serial interface and a function
 which returns the number of bytes waiting on input.
 * Buffer allocation and management is completely left to the upper layer.
 
-## Build instructions
+# Build instructions
 
+## Building the Library
 The STACKFORCE Serial MAC uses CMake as build system. Note that, once built, the library can be used by other cmake projects with the `find_package()` command without requiring to install the library on the system. Therefore running a `make install` is not mandatory to be able to build other projects that link to the serialmac library.
 
 Go to root, create build directory:
@@ -112,6 +113,7 @@ Use **dpkg** as follows to install the package.
 
     dpkg -i package_name.deb
 
+## Building the Documentation
 To generate the doxygen documentation run:
 
     cmake -DBUILD_DOC=on ..
@@ -119,13 +121,22 @@ To generate the doxygen documentation run:
 
 Doxygen documentation will generated under `<build_directory>/doc/html`. Open the **index.html** file within that directory with a web browser to access the generated documentation.
 
-## Protocol v1/v2
+## Building the Unit Tests
 
-Due to backward compatibility reasons the serial mac library v3.0.0 introduces the possibility to set the MAC protocol version at runtime. CMake builds both configurable and not-configurable versions of the library.
-The **not-configurable version uses protocol v2**. An attempt to set it to protocol v1 will cause the **sf_serialmac_init()** function to fail with a **SF_SERIALMAC_RETURN_UNSUPPORTED_PARAMETER** return value.
+To build the library together with the unit tests use the **BUILD_TESTING** cmake option as follows:
+
+    cmake -DBUILD_TESTING=on ..
+    make
+
+To run the unit tests run `make test` within cmake's build directory.
 
 ## Non CMake Build
 When building the library without CMake the **SF_SERIALMAC_INVERTED_LENGTH_RUNTIME_SEL** flag has to be set in order to enable the protocol version runtime configuration.
+
+# Protocol v1/v2
+
+Due to backward compatibility reasons the serial mac library v3.0.0 introduces the possibility to set the MAC protocol version at runtime. CMake builds both configurable and not-configurable versions of the library.
+The **not-configurable version uses protocol v2**. An attempt to set it to protocol v1 will cause the **sf_serialmac_init()** function to fail with a **SF_SERIALMAC_RETURN_UNSUPPORTED_PARAMETER** return value.
 
 # Usage
 
