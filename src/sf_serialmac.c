@@ -90,17 +90,17 @@ static struct sf_serialmac_buffer *initBuffer (
 }
 
 
-static void initFrame ( struct sf_serialmac_frame *frame, uint8_t syncWord )
+static void initFrame ( struct sf_serialmac_frame *frame, size_t headerLength )
 {
     frame->remains = 0;
     /** zero buffer */
-    memset ( ( void * ) frame->headerMemory, 0, SF_SERIALMAC_PROTOCOL_HEADER_LEN
+    memset ( ( void * ) frame->headerMemory, 0, headerLength
            );
     /** zero buffer */
     memset ( ( void * ) frame->crcMemory, 0, SF_SERIALMAC_PROTOCOL_CRC_FIELD_LEN
            );
     /** Write the sync word into the buffer */
-    frame->headerMemory[0] = syncWord;
+    frame->headerMemory[0] = SF_SERIALMAC_PROTOCOL_SYNC_WORD;
 }
 
 
@@ -111,7 +111,7 @@ static void txInit ( struct sf_serialmac_ctx *ctx )
     initBuffer ( &ctx->txFrame.payloadBuffer, NULL, 0, txProcPayloadCB );
     initBuffer ( &ctx->txFrame.crcBuffer, ctx->txFrame.crcMemory,
                  SF_SERIALMAC_PROTOCOL_CRC_FIELD_LEN, txProcCrcCB );
-    initFrame ( &ctx->txFrame, SF_SERIALMAC_PROTOCOL_SYNC_WORD );
+    initFrame ( &ctx->txFrame, ctx->headerLength );
 }
 
 
