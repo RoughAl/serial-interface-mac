@@ -365,9 +365,13 @@ enum sf_serialmac_return sf_serialmac_rx_frame ( struct sf_serialmac_ctx *ctx,
 /** Length of the STACKFORCE serial protocol CRC field */
 #define SF_SERIALMAC_PROTOCOL_CRC_FIELD_LEN              0x02U
 /** Length of the serial MAC frame header */
-#define SF_SERIALMAC_PROTOCOL_HEADER_LEN      \
- (SF_SERIALMAC_PROTOCOL_SYNC_WORD_LEN + SF_SERIALMAC_PROTOCOL_LENGTH_FIELD_LEN + \
-  SF_SERIALMAC_PROTOCOL_LENGTH_FIELD_LEN)
+#define SF_SERIALMAC_PROTOCOL_HEADER_LEN \
+        (SF_SERIALMAC_PROTOCOL_SYNC_WORD_LEN + SF_SERIALMAC_PROTOCOL_LENGTH_FIELD_LEN)
+/** Length of the serial MAC extended frame header (with inverted length field) */
+#define SF_SERIALMAC_PROTOCOL_HEADER_LEN_EXTENDED \
+        (SF_SERIALMAC_PROTOCOL_SYNC_WORD_LEN + SF_SERIALMAC_PROTOCOL_LENGTH_FIELD_LEN + \
+         SF_SERIALMAC_PROTOCOL_LENGTH_FIELD_LEN)
+
 
 /**
  * A frame consists of the elements:
@@ -432,8 +436,8 @@ struct sf_serialmac_frame {
     enum rxTxState state;
     /** Payload bytes that still needs to be processed. */
     uint16_t remains;
-    /** Memory for the MAC header: [SYNC] [Length field] */
-    uint8_t headerMemory[SF_SERIALMAC_PROTOCOL_HEADER_LEN];
+    /** Memory for the MAC header: [SYNC] [Length field] [Inv. Length field]. */
+    uint8_t headerMemory[SF_SERIALMAC_PROTOCOL_HEADER_LEN_EXTENDED];
     /** Memory for the CRC. */
     uint8_t crcMemory[SF_SERIALMAC_PROTOCOL_CRC_FIELD_LEN];
     /** Buffer for the frame header to transmit. */

@@ -414,19 +414,8 @@ enum sf_serialmac_return sf_serialmac_init ( struct sf_serialmac_ctx *ctx,
     ctx->tx_frame_event = txEvt;
     ctx->tx_buffer_event = txBufEvt;
     ctx->error_event = error_event;
-
     ctx->useInvertedLengthField = useInvertedLengthField;
-    ctx->headerLength = SF_SERIALMAC_PROTOCOL_HEADER_LEN;
-
-    if( ctx->useInvertedLengthField )
-    {
-        ctx->headerLength = SF_SERIALMAC_PROTOCOL_HEADER_LEN;
-    }
-    else
-    {
-        ctx->headerLength = ( SF_SERIALMAC_PROTOCOL_HEADER_LEN -
-                              SF_SERIALMAC_PROTOCOL_LENGTH_FIELD_LEN );
-    }
+    ctx->headerLength = useInvertedLengthField ?  SF_SERIALMAC_PROTOCOL_HEADER_LEN_EXTENDED : SF_SERIALMAC_PROTOCOL_HEADER_LEN;
 
     /** Reset the context states and variables. */
     sf_serialmac_reset( ctx );
