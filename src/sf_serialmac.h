@@ -77,9 +77,7 @@ enum sf_serialmac_return
     /** There was an error that should never have happened ;). */
     SF_SERIALMAC_RETURN_ERROR_EXCEPTION,
     /** There was an error in buffer handling */
-    SF_SERIALMAC_RETURN_ERROR_BUFFER,
-    /** The parameter/setting is not supported. */
-    SF_SERIALMAC_RETURN_UNSUPPORTED_PARAMETER
+    SF_SERIALMAC_RETURN_ERROR_BUFFER
 };
 
 /**
