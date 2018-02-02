@@ -13,9 +13,9 @@ extern "C"
  *
  * @file
  * @copyright  STACKFORCE GmbH, Heitersheim, Germany, www.stackforce.de
- * @author     STACKFORCE
  * @author     Lars Möllendorf
- * @brief      STACKFORCE serial command line client (sf)
+ * @author     Adrian Antonana
+ * @brief      STACKFORCE Serial MAC Module
  *
  * @details Please consult the "README" for a general overview
  * of the STACKFORCE Serial MAC.
@@ -90,17 +90,17 @@ static struct sf_serialmac_buffer *initBuffer (
 }
 
 
-static void initFrame ( struct sf_serialmac_frame *frame, uint8_t syncWord )
+static void initFrame ( struct sf_serialmac_frame *frame, size_t headerLength )
 {
     frame->remains = 0;
     /** zero buffer */
-    memset ( ( void * ) frame->headerMemory, 0, SF_SERIALMAC_PROTOCOL_HEADER_LEN
+    memset ( ( void * ) frame->headerMemory, 0, headerLength
            );
     /** zero buffer */
     memset ( ( void * ) frame->crcMemory, 0, SF_SERIALMAC_PROTOCOL_CRC_FIELD_LEN
            );
     /** Write the sync word into the buffer */
-    frame->headerMemory[0] = syncWord;
+    frame->headerMemory[0] = SF_SERIALMAC_PROTOCOL_SYNC_WORD;
 }
 
 
@@ -111,7 +111,7 @@ static void txInit ( struct sf_serialmac_ctx *ctx )
     initBuffer ( &ctx->txFrame.payloadBuffer, NULL, 0, txProcPayloadCB );
     initBuffer ( &ctx->txFrame.crcBuffer, ctx->txFrame.crcMemory,
                  SF_SERIALMAC_PROTOCOL_CRC_FIELD_LEN, txProcCrcCB );
-    initFrame ( &ctx->txFrame, SF_SERIALMAC_PROTOCOL_SYNC_WORD );
+    initFrame ( &ctx->txFrame, ctx->headerLength );
 }
 
 
@@ -392,16 +392,10 @@ enum sf_serialmac_return sf_serialmac_init ( struct sf_serialmac_ctx *ctx,
         SF_SERIALMAC_EVENT_ERROR error_event,
         bool useInvertedLengthField)
 {
-    if ( !ctx ) {
+    if ( !ctx || !portHandle || !read || !readWaiting || !write || !rxEvt ||
+        !rxBufEvt || !rxSyncEvt || !txEvt || !txBufEvt || !error_event ) {
         return SF_SERIALMAC_RETURN_ERROR_NPE;
     }
-
-    #ifndef SF_SERIALMAC_INVERTED_LENGTH_RUNTIME_SEL
-    if( !useInvertedLengthField )
-    {
-        return SF_SERIALMAC_RETURN_UNSUPPORTED_PARAMETER;
-    }
-    #endif
 
     ctx->portHandle = portHandle;
     ctx->read = read;
@@ -413,19 +407,8 @@ enum sf_serialmac_return sf_serialmac_init ( struct sf_serialmac_ctx *ctx,
     ctx->tx_frame_event = txEvt;
     ctx->tx_buffer_event = txBufEvt;
     ctx->error_event = error_event;
-
     ctx->useInvertedLengthField = useInvertedLengthField;
-    ctx->headerLength = SF_SERIALMAC_PROTOCOL_HEADER_LEN;
-
-    if( ctx->useInvertedLengthField )
-    {
-        ctx->headerLength = SF_SERIALMAC_PROTOCOL_HEADER_LEN;
-    }
-    else
-    {
-        ctx->headerLength = ( SF_SERIALMAC_PROTOCOL_HEADER_LEN -
-                              SF_SERIALMAC_PROTOCOL_LENGTH_FIELD_LEN );
-    }
+    ctx->headerLength = useInvertedLengthField ?  SF_SERIALMAC_PROTOCOL_HEADER_LEN_EXTENDED : SF_SERIALMAC_PROTOCOL_HEADER_LEN;
 
     /** Reset the context states and variables. */
     sf_serialmac_reset( ctx );
