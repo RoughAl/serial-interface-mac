@@ -32,7 +32,7 @@
 ##
 
 cmake_minimum_required(VERSION 3.6)
-project(sfserialmac VERSION 3.0.0)
+project(sfserialmac VERSION 3.0.1)
 
 #---------------------------------------------------------------------------------------
 # Include cmake modules
