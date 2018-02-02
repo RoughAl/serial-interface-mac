@@ -397,13 +397,6 @@ enum sf_serialmac_return sf_serialmac_init ( struct sf_serialmac_ctx *ctx,
         return SF_SERIALMAC_RETURN_ERROR_NPE;
     }
 
-    #ifndef SF_SERIALMAC_INVERTED_LENGTH_RUNTIME_SEL
-    if( !useInvertedLengthField )
-    {
-        return SF_SERIALMAC_RETURN_UNSUPPORTED_PARAMETER;
-    }
-    #endif
-
     ctx->portHandle = portHandle;
     ctx->read = read;
     ctx->readWait = readWaiting;
