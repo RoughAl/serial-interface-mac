@@ -48,64 +48,34 @@ configure_file(
 # Serialmac targets
 #---------------------------------------------------------------------------------------
 
-# not runtime configurable
-add_library(sfserialmac_o OBJECT ${SERIALMAC_SOURCES})
-add_library(sfserialmac SHARED $<TARGET_OBJECTS:sfserialmac_o>)
-add_library(sfserialmac-static STATIC $<TARGET_OBJECTS:sfserialmac_o>)
-
-target_include_directories(sfserialmac_o PRIVATE $<TARGET_PROPERTY:sfcrc,INTERFACE_INCLUDE_DIRECTORIES>)
-
-set_target_properties(sfserialmac_o PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
-
-set_target_properties(sfserialmac PROPERTIES VERSION ${PROJECT_VERSION})
-set_target_properties(sfserialmac-static PROPERTIES VERSION ${PROJECT_VERSION})
-set_target_properties(sfserialmac PROPERTIES OUTPUT_NAME sfserialmac)
-set_target_properties(sfserialmac-static PROPERTIES OUTPUT_NAME sfserialmac)
-
-target_include_directories(sfserialmac INTERFACE
-    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/sfserialmac>
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}>
-    $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}>
-)
-
-target_include_directories(sfserialmac-static INTERFACE
-    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/sfserialmac>
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}>
-    $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}>
-)
-
-target_link_libraries(sfserialmac-static INTERFACE sfcrc-static)
-target_link_libraries(sfserialmac PUBLIC sfcrc)
-
 # runtime configurable
-add_library(sfserialmac-configurable_o OBJECT ${SERIALMAC_SOURCES})
-target_compile_definitions(sfserialmac-configurable_o PRIVATE SF_SERIALMAC_INVERTED_LENGTH_RUNTIME_SEL)
-add_library(sfserialmac-configurable SHARED $<TARGET_OBJECTS:sfserialmac-configurable_o>)
-add_library(sfserialmac-configurable-static STATIC $<TARGET_OBJECTS:sfserialmac-configurable_o>)
+add_library(${PROJECT_NAME}_o OBJECT ${SERIALMAC_SOURCES})
+add_library(${PROJECT_NAME} SHARED $<TARGET_OBJECTS:${PROJECT_NAME}_o>)
+add_library(${PROJECT_NAME}-static STATIC $<TARGET_OBJECTS:${PROJECT_NAME}_o>)
 
-target_include_directories(sfserialmac-configurable_o PRIVATE $<TARGET_PROPERTY:sfcrc,INTERFACE_INCLUDE_DIRECTORIES>)
+target_include_directories(${PROJECT_NAME}_o PRIVATE $<TARGET_PROPERTY:sfcrc,INTERFACE_INCLUDE_DIRECTORIES>)
 
-set_target_properties(sfserialmac-configurable_o PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
+set_target_properties(${PROJECT_NAME}_o PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
 
-set_target_properties(sfserialmac-configurable PROPERTIES VERSION ${PROJECT_VERSION})
-set_target_properties(sfserialmac-configurable-static PROPERTIES VERSION ${PROJECT_VERSION})
-set_target_properties(sfserialmac-configurable PROPERTIES OUTPUT_NAME sfserialmac-configurable)
-set_target_properties(sfserialmac-configurable-static PROPERTIES OUTPUT_NAME sfserialmac-configurable)
+set_target_properties(${PROJECT_NAME} PROPERTIES VERSION ${PROJECT_VERSION})
+set_target_properties(${PROJECT_NAME}-static PROPERTIES VERSION ${PROJECT_VERSION})
+set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME ${PROJECT_NAME})
+set_target_properties(${PROJECT_NAME}-static PROPERTIES OUTPUT_NAME ${PROJECT_NAME})
 
-target_include_directories(sfserialmac-configurable INTERFACE
+target_include_directories(${PROJECT_NAME} INTERFACE
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/sfserialmac>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}>
     $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}>
 )
 
-target_include_directories(sfserialmac-configurable-static INTERFACE
+target_include_directories(${PROJECT_NAME}-static INTERFACE
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/sfserialmac>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}>
     $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}>
 )
 
-target_link_libraries(sfserialmac-configurable-static INTERFACE sfcrc-static)
-target_link_libraries(sfserialmac-configurable PUBLIC sfcrc)
+target_link_libraries(${PROJECT_NAME}-static INTERFACE sfcrc-static)
+target_link_libraries(${PROJECT_NAME} PUBLIC sfcrc)
 
 #---------------------------------------------------------------------------------------
 # Doxygen documentation generation
@@ -210,7 +180,7 @@ write_basic_package_version_file(
 )
 
 # install targets
-install(TARGETS sfserialmac sfserialmac-static sfserialmac-configurable sfserialmac-configurable-static
+install(TARGETS ${PROJECT_NAME} ${PROJECT_NAME}-static
         EXPORT ${TARGETS_EXPORT_NAME}
         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
